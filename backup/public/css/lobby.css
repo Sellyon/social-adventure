@@ -1,0 +1,785 @@
+*{padding:0;margin:0}
+#canvas {
+	border: 1px solid black;
+	height: 100vh;
+	box-sizing: border-box;
+}
+#canvasAndButton{
+	display: inline-block;
+	float: left;
+}
+
+body{
+	background-color : #EBC193;
+	color : #5C302A;
+	font-family: 'Special Elite', cursive;
+	text-align: center;
+	height: 100%;
+	display : table;
+	width: 100%;
+}
+a:visited{
+	color: #5C3060;
+}
+
+p {
+	font-family: Arial, Helvetica, sans-serif; 
+}
+
+nav{
+	width : 100%;
+	margin : 0 auto;
+	height: 38px;
+	text-align: left;
+	border-bottom : 1px solid #EEE2B2;
+	background-color: #906e40;
+	padding: 5;
+	align-items: center;
+	display: flex;
+	text-align: center;
+	white-space: nowrap;
+	font-size: 14px;
+	font-family: arial;
+}
+
+nav div ul li {
+	display: inline-block;
+	width: 20%;
+	text-align: center;
+	border : 2px solid transparent;
+}
+nav div ul li a:link {
+	color: #f6d8b2;
+}
+nav div ul li a:visited {
+	color: #f6d8b2;
+}
+nav div ul li a:hover{
+	color: white;
+}
+nav div ul li a {
+	text-decoration:none;
+}
+
+button{
+	color: bisque;
+	background-color: #5C302A;
+	width: 200;
+    height: 50;
+    font-size: 20;
+    text-decoration: none;
+    border: none;
+    cursor:pointer;
+}
+
+button:hover{
+	color: #5C302A;
+	background-color: bisque;
+	transition: all 0.3s ease-out;
+}
+
+#navigation{
+	text-align: left;
+    width: 45%;
+    display: inline-block;
+}
+
+#avatarMini{
+	border-radius:25px;
+}
+
+/*****User management *****/
+#userManage{
+	text-align: right;
+    width: 45%;
+    display: inline-block;
+}
+
+#profil{
+	width: 10%;
+    display: inline-block;
+}
+
+/****** Game *****/
+#main{
+	width : 70%;
+	margin : 0 auto;
+	padding: 25px;
+	text-align: center;
+}
+#main p{
+	margin: 10px;
+}
+
+.indexPitch{
+	width: 80%!important;
+}
+
+#indexButton {
+	
+}
+
+#indexButton a {
+	/*color: bisque;*/
+	text-decoration:none;
+	width: 100%;
+	height: 100%;
+}
+
+.connectionForm{
+	border: 2px solid black;
+	width: 300px;
+	margin: auto;
+	margin-top: 30px;
+	margin-bottom: 80px;
+}
+
+.connectionForm > h2{
+	position: relative;
+	top: -15px;
+	background-color: #EBC193;
+	width: 250px;
+	margin: auto;
+}
+
+.connectionForm > form > button{
+	position: relative;
+	top: 25px;
+}
+
+#emoticons{
+	width: 150px;
+}
+
+#emoticons > *{
+	width: 75px;
+}
+
+#emoticons > input{
+	opacity: 0.5!important;
+	filter: alpha(opacity=50)!important; /* For IE8 and earlier */
+}
+#emoticons > input:hover{
+	opacity: 1!important;
+	filter: alpha(opacity=100)!important; /* For IE8 and earlier */
+}
+
+/**** Lobby ****/
+
+#lobbyContainer > *{
+	height: calc(100vh - 198px);
+	min-height: 550px;
+}
+#lobbySideLeft{
+	width: 15%;
+	display: inline-block;
+	box-sizing: border-box;
+	border-right: 1px solid #EEE2B2;
+	background-color: #3e2e1c;
+	color: #f6d8b2;
+}
+#lobbySideLeft h2{
+	font-family: arial;
+	font-size: 14px;
+	font-weight: normal;
+	color: #bdad9c;
+}
+#lobbySideLeft a:link {
+	color: #f6d8b2;
+}
+#lobbySideLeft a:visited {
+	color: #f6d8b2;
+}
+#lobbySideLeft a:hover{
+	color: white;
+}
+#lobbySideLeft a {
+	text-decoration:none;
+}
+
+#lobbyAntichamber {
+	width: 60%;
+	display: inline-block;
+	box-sizing: border-box;
+	vertical-align: top;
+	padding: 15;
+	border-right: 1px solid #EEE2B2;
+	background-image: url("/images/backgrounds/prisonWall.jpg");
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+#lobbyChat {
+	width: 25%;
+	display: inline-block;
+	box-sizing: border-box;
+	vertical-align: top;
+	background-color: #e0c09a;
+}
+
+#chatBox {
+	height: 60%;
+	width: 100%;
+	background-color: bisque;
+	overflow: auto;
+	text-align: left;
+}
+
+#chatBox  p:nth-child(even) {
+	background-color: #e0c09a;
+}
+
+#chatBox  p{
+	padding-left: 5;
+	padding-right: 5;
+	padding-top: 1;
+	padding-bottom: 1;
+	overflow-wrap: break-word;
+}
+
+#lobbyConnectedPlayers {
+	width: 100%;
+	height: 50%;
+}
+
+#lobbyConnectedPlayersTexts {
+	height: 10%;
+}
+
+#connectedPlayers {
+	height: 90%;
+	width: 100%;
+	border-bottom: 1px solid #EEE2B2;
+	overflow: auto;
+	text-align: left;
+}
+
+#connectedPlayers p:hover {
+	background-color: #5a452d;
+}
+
+#connectedPlayers p a {
+	padding-left: 5px;
+}
+
+#lobbyCurrentMatchesTexts{
+	height: 10%;
+}
+
+#lobbyCurrentMatches {
+	width: 100%;
+	height: 50%;
+}
+
+#currentMatches {
+	height: 90%;
+	width: 100%;
+	overflow: auto;
+	display: inline-block;
+	text-align: left;
+}
+
+#currentMatches p:hover {
+	background-color: #5a452d;
+}
+
+#currentMatches p a {
+	padding-left: 5px;
+}
+
+#antichamberAdder {
+	margin: 10;
+}
+
+#slotPlayer1{
+	width: 40%;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+#slotPlayer2{
+	width: 40%;
+	display: inline-block;
+}
+
+#avatarPlayer1, #avatarPlayer2{
+	border: 2px solid #5A5540;
+	width: 80%;
+	box-sizing: border-box;
+	height: auto;
+}
+
+#player1AvatarSelect, #player2AvatarSelect {
+	visibility: hidden;
+	width: 20%;
+	height: auto;
+    font-size: 40;
+    vertical-align: bottom;
+    box-sizing: border-box;
+}
+
+#antichamberStatus {
+	margin-top: 10px;
+}
+
+#evasionCountDown {
+	font-family: 'Special Elite', cursive;
+	font-size: 150px;
+	border-radius: 70px;
+	display: none;
+}
+
+/* Hall of fame */
+
+.oneHOFMatch {
+	box-sizing: border-box;
+	width: 90%;
+	margin: 5;
+    padding: 10;
+	border: 1px solid #EEE2B2;
+	background-color: bisque;
+    list-style: none;
+}
+
+.containerIconRank{
+	float: left;
+	overflow: hidden;
+	width: 38px;
+	height: 45px;
+}
+
+.containerIconRank > img {
+	width: 114px;
+	height: 45px;
+	position: relative;
+}
+
+.containerIconRank:nth-child(3) > img {
+	left: -38px;
+}
+
+.containerIconRank:nth-child(5) > img {
+	left: -76px;
+}
+
+#hoFMatchScreen {
+	height: 400px;
+	overflow: auto;
+}
+
+.oneHOFMatch:hover {
+	padding: 6;
+	border: 5px solid #5C302A;
+}
+
+#hOFCaption{
+	width: 90%;
+	margin-top: 15px;
+	color: #2D1916;
+}
+
+.hOFElement{
+	display: inline-block;
+	text-align: center;
+	width: 12%;
+	padding: 10px;
+	margin: 0px!important;
+}
+
+.hOFElement > img {
+	width: 75%;
+	margin: auto;
+}
+
+#infosInGame {
+	margin: 10px;
+	display: inline-block;
+	vertical-align: top;
+	float: left;
+}
+
+#infosInGame > div{
+	border-radius: 15px;
+	padding: 5px;
+	background-color: rgba(255, 255, 255, 0.75);
+}
+
+#infosInGame > h2 {
+	margin-top: 15px;
+}
+
+#victoryButton {
+	visibility: hidden;
+	left: calc(50% - 35px);
+	top: calc(50% - 65px);
+	position: absolute;
+}
+#disconnectionIssues {
+	position: absolute;
+	visibility: hidden;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	background-color: rgba(0, 0, 0, 0.5);
+	overflow: hidden;
+}
+#disconnectionText {
+	text-align: center;
+	transform: translateY(20%);
+	color: white;
+	font-size: 48px;
+	height: 100%;
+	padding: 50px;
+}
+
+/* Profil */
+#profilWrapper{
+	margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+	margin-right: auto;
+    text-align: left;
+    width: 90%;
+}
+#profilWrapper > h1{
+    margin-bottom: 10px;
+}
+#profilAvatar{
+	width: 40%;
+	box-sizing: border-box;
+	display: inline-block;
+}
+#profilAvatar > img{
+	width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    width: fill-available;
+}
+#profilStats{
+	box-sizing: border-box;
+	display: inline-block;
+	padding-right: 10px;
+	width: 50%;
+}
+#profilStats > div{
+	margin-bottom : 15px;
+}
+#profilDetails{
+    width: 55%;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 25px;
+	margin-top: 32px;
+	box-sizing: border-box;
+	border: 1px solid black;
+	background-image: url("/images/backgrounds/paper.jpg");
+	background-size: cover;
+	color: black;
+}
+#profilDetails > *{
+	width: 50%
+	margin: 15px;
+	text-align: left;
+	box-sizing: border-box;
+	padding: 10px;
+}
+#profilPresentation{
+	height: 200px;
+}
+#profilPresentation > p{
+	overflow: auto;
+	position: relative;
+	width: 100%;
+}
+#profilPresentation > h2{
+	position: relative;
+	left: -40px;
+}
+#profilFriends{
+	display: inline-block;
+	width: 50%;
+	vertical-align: top;
+	padding-left: 10px;
+	padding-right: 10px;
+	box-sizing: border-box;
+	border-left: 1px solid black;
+}
+#profilFriends > div{
+	margin-bottom: 15px;
+}
+#profilFriends > div > p{
+	font-size: 12px;
+}
+#profilFriends > div > ul{
+	list-style: none;
+}
+#profilFriends > div > ul > li >  form:hover{
+	background-color: rgba(255,255,255,0.5);
+	transition: all 0.5s ease-out;
+}
+#profilFriends > div > ul > li {
+	margin-bottom: 5px;
+}
+#profilFriends > div > ul > li > form > button{
+	width: 50px;
+	font-size: 12px;
+	height: 20px;
+	float: right;
+}
+#statsIcons{
+	margin-bottom: 5px;
+}
+#statsIcons > div{
+	width: 25%;
+	display: inline-block;
+	text-align: center;
+}
+#statsIcons > div > img{
+	width: 50px;
+}
+#iconTrombone{
+	width: 40px;
+	float: left;
+	clear: left;
+	top: -28px;
+	position: relative;
+	z-index: 1;
+}
+#iconAddFriend{
+	float: right;
+    position: relative;
+    top: -35px;
+}
+#statsValues > *{
+	width: 25%;
+	box-sizing: border-box;
+	display: inline-block;
+	text-align: center;
+}
+#statsAndFriends{
+	border-top: 1px solid black;
+}
+#hiddenField{
+	display: none;
+}
+.edit{
+	width: 40px;
+    height: 40px;
+	background-color: rgba(255, 247, 238, 0);
+	border-radius: 5px;
+	background-color: #f6d8b2;
+	transition: all 0.5s ease-out;
+}
+.edit:hover{
+	background-color: rgba(255, 247, 238, 1);
+}
+#descriptionForm{
+	display: none;
+}
+#editDescription{
+	width: 100%;
+	position: relative;
+	top: -20px;
+}
+#descriptionForm > div > button{
+	width: 50%;
+	font-size: 16px;
+	height: 40px;
+	position: relative;
+	top: -20px;
+}
+#cancelEditDescription{
+	display: none;
+}
+#avatarForm{
+	position: fixed;
+	background-color: rgba(255, 255, 255, 0.85);
+	width: 100vw;
+	height: 100vh;
+	top: 0px;
+	left: 0px;
+	z-index: 2;
+	display: none;
+	text-align: center;
+	padding-top: 10vh;
+}
+#editAvatar{
+	display: block;
+	width: 100%;
+	width: 400px;
+	margin: auto;
+}
+#avatarPreview{
+	max-width: 200px;
+	max-height: 200px;
+}
+#iconEditAvatar{
+	position: relative;
+	display: block;
+	top: -40px;
+	left: 3px;
+}
+#iconEditDescription{
+	display: block;
+    position: relative;
+    left: 3px;
+}
+/* FOOTER */
+
+#portfolioWrapper{
+	width: 90px;
+	height: 60px;
+	margin: auto;
+	padding-top: 30px;
+}
+
+#portfolioWrapper > a{
+	text-decoration: none;
+}
+
+footer {
+    height: 160px;
+    background-color: #48362c;
+    display : table-row;
+}
+footer h1 {
+    color: white;
+    text-align: center;
+    font-family: 'Crete Round', serif;
+    font-size: 45px;
+    text-decoration: none;
+    transition: all 0.3s ease-out;
+}
+footer h1:hover {
+    color: #a70db2;
+    cursor: pointer;
+}
+.copyright {
+    text-align: center;
+    padding-top:30px;
+    color: #fff;
+}
+.dot {
+    color: #a70db2;
+}
+
+/*media queries*/
+
+/*navigation*/
+
+@media screen and (max-width: 920px) {
+	nav div ul li {
+    	width: 38%;
+	}
+}
+
+/*lobby*/
+
+@media screen and (min-width: 400px) and (max-width: 600px) {
+	#lobbySideLeft{
+		height: 200px;
+	}
+	#lobbyConnectedPlayers, #lobbyCurrentMatches {
+		width: 50%;
+		height: 100%;
+		display: inline-block;
+		box-sizing: border-box;
+	}
+	#lobbyConnectedPlayers {
+		border-right: 1px solid bisque;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	#lobbyContainer > * {
+		display: block;
+		width: 100%;
+	}
+}
+
+/*game*/
+
+@media screen and (min-width: 1000px) {
+	#infosInGame > div{
+		margin-bottom: 15px;
+		text-align: left;
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	#infosInGame{
+		position: absolute;
+		display: block;
+		margin: 0;
+		width: 100%;
+	}
+	#infosInGame > * {
+		display: inline-block;
+		vertical-align: text-top;
+		margin: 10px;
+	}
+	#player1Infos{
+		float: left;
+	}
+	#player2Infos{
+		float: right;
+	}
+	#elapsedTimeInfos{
+		display: block;
+		width: 100px;
+    	margin: auto;
+	}
+	#emoticons{
+		width: auto;
+    	position: absolute;
+    	left: calc(8vw);
+    	top: calc(100vh - 85px);
+    	background-color: rgba(255, 255, 255, 0.2)!important;
+	}
+	#emoticons > input{
+		opacity: 0.2!important;
+		filter: alpha(opacity=20)!important; /* For IE8 and earlier */
+	}
+	#emoticons > input:hover{
+		opacity: 1!important;
+		filter: alpha(opacity=100)!important; /* For IE8 and earlier */
+	}
+	#emoticons:hover{
+    	background-color: rgba(255, 255, 255, 0.75)!important;
+	}
+}
+
+@media screen and (max-width: 850px) {
+	#canvas{
+		height: 100%;
+    	width: 100vw;
+	}
+	#infosInGame > div > h2{
+		font-size: 18px;
+	}
+	#infosInGame > div > p{
+		font-size: 14px;
+	}
+}
+
+/*profile*/
+
+@media screen and (max-width: 950px) {
+	#profilFriends{
+		display: block;
+		border-left: 0px;
+		border-top: 1px solid black;
+		width: 100%;
+		padding: 10px;
+	}
+	#profilStats{
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 850px) {
+	#profilDetails{
+		display: block;
+		margin-left: 0px;
+		width: 100%;
+	}
+}

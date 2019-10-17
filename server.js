@@ -14,9 +14,9 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const MongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectID;
-const client = require(__dirname + '/dbs/db.js');
-const lobbyMod = require(__dirname + '/myModules/lobbyModule.js');
-const gameMod = require(__dirname + '/myModules/gameModule.js');
+const client = require(__dirname + '/backend/dbs/db.js');
+const lobbyMod = require(__dirname + '/backend/myModules/lobbyModule.js');
+const gameMod = require(__dirname + '/backend/myModules/gameModule.js');
 const uri = "mongodb+srv://yoannmroz:ChristopheMonGodetBLOL@cluster0-bznsv.mongodb.net/test?retryWrites=true&w=majority";
 var myDB;
 
@@ -27,13 +27,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
-app.use('/images', express.static(__dirname + '/images'));
-app.use('/css', express.static(__dirname + '/css'));
-app.use('/js', express.static(__dirname + '/js'));
-app.use('/', require('./routing'));
+app.use('/public',express.static(path.join(__dirname, '/public'))); 
+app.use('/build',express.static(path.join(__dirname, '/build')));
+app.use('/static',express.static(path.join(__dirname, '/build/static')));
+app.use('/images', express.static(path.join(__dirname, '/public/images')));
+app.use('/css', express.static(path.join(__dirname, '/public/css')));
+app.use('/js', express.static(path.join(__dirname, '/public/js')));
+app.use('/', require('./backend/routing'));
 
 app.set('view engine', 'pug');
-app.set('views','./views');
+app.set('views','./backend/views');
 
 app.use('/Unauthorized', function (req, res) {
 	res.status(401).render('error401');
