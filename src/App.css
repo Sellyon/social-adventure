@@ -1,5 +1,22 @@
+* {
+  -moz-box-sizing: border-box; box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}
+
 .App {
   background-color: black;
+  height: 100%;
+  position: relative;
+  min-height: 100vh;
 }
 
 .App-logo {
@@ -21,7 +38,17 @@
   color: #09d3ac;
 }
 
+.footerSavior {
+  height: 200px;
+}
+
 #town {
   width:100%;
   max-width: 710px;
+}
+
+@media screen and (max-width: 960px) {
+  .footerWrapper: {
+    position: 'relative';
+  }
 }

@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
+  AppBar: {
+    backgroundColor: 'rgb(155, 73, 255)',
+  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -161,7 +164,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.AppBar}>
         <Toolbar>
           <IconButton
             edge="start"

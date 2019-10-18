@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './components/navbar';
+import Footer from './components/footer';
 import BlockSection from './components/blockSection';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
@@ -54,7 +55,7 @@ export default class App extends React.Component {
   };
   componentDidMount() {
     this.generalCounterIncrementation();
-    setTimeout(this.updateDimensions, 1);
+    window.addEventListener('load', this.updateDimensions);
     window.addEventListener('resize', this.updateDimensions);
   }
   componentWillUnmount() {
@@ -64,51 +65,55 @@ export default class App extends React.Component {
   render() {
     
     return (
-      <div className="App">
-        <Navbar />
-        <Grid container>
-          <Grid item xs={12} md>
-            <img src="/images/backgrounds/town.gif" id="town" alt="animated isometric city"/>
-            <div className="font-icon-wrapper" onClick={(e) => this.handleClick(0)} value={0}>
-              <Fab 
-                size="small"
-                color="secondary"
-                aria-label="add"
-                style={{position:'absolute', left: this.state.imageWidth*385/710+'px', top:this.state.imageHeight*195/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
-              >
-              <InfoIcon/>
-              </Fab>
-            </div>
-            <div className="font-icon-wrapper" onClick={(e) => this.handleClick(1)} value={0}>
-              <Fab
-                size="small"
-                color="secondary"
-                aria-label="add"
-                style={{position:'absolute', left:this.state.imageWidth*215/710+'px', top:this.state.imageHeight*305/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
-              >
-                <GroupIcon />
-              </Fab>
-            </div>
-            <div className="font-icon-wrapper" onClick={(e) => this.handleClick(2)} value={0}>
-              <Fab
-                size="small"
-                color="secondary"
-                aria-label="add"
-                style={{position:'absolute', left:this.state.imageWidth*560/710+'px', top:this.state.imageHeight*300/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
-              >
-                <SportsEsportsIcon />
-              </Fab>
-            </div>
+      <React.Fragment>
+        <div className="App">
+          <Navbar />
+          <Grid container>
+            <Grid item xs={12} md>
+              <img src="/images/backgrounds/town.gif" id="town" alt="animated isometric city"/>
+              <div className="font-icon-wrapper" onClick={(e) => this.handleClick(0)} value={0}>
+                <Fab 
+                  size="small"
+                  color="secondary"
+                  aria-label="add"
+                  style={{position:'absolute', left: this.state.imageWidth*385/710+'px', top:this.state.imageHeight*195/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
+                >
+                <InfoIcon/>
+                </Fab>
+              </div>
+              <div className="font-icon-wrapper" onClick={(e) => this.handleClick(1)} value={0}>
+                <Fab
+                  size="small"
+                  color="secondary"
+                  aria-label="add"
+                  style={{position:'absolute', left:this.state.imageWidth*215/710+'px', top:this.state.imageHeight*305/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
+                >
+                  <GroupIcon />
+                </Fab>
+              </div>
+              <div className="font-icon-wrapper" onClick={(e) => this.handleClick(2)} value={0}>
+                <Fab
+                  size="small"
+                  color="secondary"
+                  aria-label="add"
+                  style={{position:'absolute', left:this.state.imageWidth*560/710+'px', top:this.state.imageHeight*300/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
+                >
+                  <SportsEsportsIcon />
+                </Fab>
+              </div>
+            </Grid>
+            <Grid item xs={12} md>
+              <BlockSection
+                checked={this.state.checked}
+                selectedMenu={this.state.selectedMenu}
+                imageHeight={this.state.imageHeight}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md>
-            <BlockSection
-              checked={this.state.checked}
-              selectedMenu={this.state.selectedMenu}
-              imageHeight={this.state.imageHeight}
-            />
-          </Grid>
-        </Grid>
-      </div>
+        <div className="footerSavior"></div>
+        <Footer/>
+        </div>
+      </React.Fragment>
     );
   }
 }
