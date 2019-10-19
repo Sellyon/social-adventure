@@ -21,9 +21,34 @@ export default class App extends React.Component {
       checked: true,
     };
 
+    this.butnCoord = [
+    // "news" button values
+      {
+        x : 385,
+        y : 195,
+        icon : function(){ return <InfoIcon/>}
+      },
+    // "game" button values
+      {
+        x : 560,
+        y : 300,
+        icon : function(){ return <SportsEsportsIcon/>}
+      },
+    // "socialGame" button values
+      {
+        x : 215,
+        y : 305,
+        icon : function(){ return <GroupIcon/>}
+      },
+    ]
+
+    // Natural width & height of the city image, setted in componentDidMount
+    this.naturalImageSize = {};
+
     this.handleClick = this.handleClick.bind(this);
   }
 
+  // Clicking button consequence
   handleClick (newValue) {
     if (this.state.selectedMenu !== newValue && (newValue === 0 || newValue === 1 || newValue === 2)) {
       this.setState({
@@ -39,6 +64,7 @@ export default class App extends React.Component {
     }
   }
 
+  // A counter incremented in the time used in sinusoïdal way to make button fade
   generalCounterIncrementation () {
     setInterval( () => {
       this.setState({
@@ -47,13 +73,29 @@ export default class App extends React.Component {
     }, 100);
   }
 
+  // Here are tracked width and height of the city image, used to set button positions
   updateDimensions = () => {
     this.setState({
       imageWidth: document.getElementById('town').width,
       imageHeight: document.getElementById('town').height,
     });
   };
+
+  getPosRelativeToImage (coord, imageSize) {
+    return coord/imageSize+'px'
+  }
+
+  // Here we set color and opacity of button : opacity to 1 is selected menu is linked to this button and a slightly saturated color
+  bgColorButnValue (index) {
+    if (index !== this.state.selectedMenu) {
+      return 'rgba(194, 18, 26, '+(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2+')'
+    } else {
+      return 'rgba(255, 11, 22, '+1+')'
+    }
+  }
+
   componentDidMount() {
+    this.naturalImageSize = {width:document.getElementById('town').naturalWidth,height:document.getElementById('town').naturalHeight}
     this.generalCounterIncrementation();
     window.addEventListener('load', this.updateDimensions);
     window.addEventListener('resize', this.updateDimensions);
@@ -71,36 +113,24 @@ export default class App extends React.Component {
           <Grid container>
             <Grid item xs={12} md>
               <img src="/images/backgrounds/town.gif" id="town" alt="animated isometric city"/>
-              <div className="font-icon-wrapper" onClick={(e) => this.handleClick(0)} value={0}>
-                <Fab 
-                  size="small"
-                  color="secondary"
-                  aria-label="add"
-                  style={{position:'absolute', left: this.state.imageWidth*385/710+'px', top:this.state.imageHeight*195/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
-                >
-                <InfoIcon/>
-                </Fab>
-              </div>
-              <div className="font-icon-wrapper" onClick={(e) => this.handleClick(1)} value={0}>
-                <Fab
-                  size="small"
-                  color="secondary"
-                  aria-label="add"
-                  style={{position:'absolute', left:this.state.imageWidth*215/710+'px', top:this.state.imageHeight*305/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
-                >
-                  <GroupIcon />
-                </Fab>
-              </div>
-              <div className="font-icon-wrapper" onClick={(e) => this.handleClick(2)} value={0}>
-                <Fab
-                  size="small"
-                  color="secondary"
-                  aria-label="add"
-                  style={{position:'absolute', left:this.state.imageWidth*560/710+'px', top:this.state.imageHeight*300/400+'px', opacity:(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2}}
-                >
-                  <SportsEsportsIcon />
-                </Fab>
-              </div>
+              {this.butnCoord && 
+                this.butnCoord.map(
+                  function(butn, index) {
+                    return (
+                      <div className="font-icon-wrapper" onClick={(e) => this.handleClick(index)} value={index} key = {index}>
+                        <Fab 
+                          size="small"
+                          color="secondary"
+                          aria-label="add"
+                          style={{position:'absolute', left:this.getPosRelativeToImage(this.state.imageWidth*butn.x, this.naturalImageSize.width), top:this.getPosRelativeToImage(this.state.imageHeight*butn.y, this.naturalImageSize.height), width:40, height:40, backgroundColor: this.bgColorButnValue(index),}}
+                        >
+                        {butn.icon()}
+                        </Fab>
+                      </div>
+                    )
+                  }, this
+                )
+              }
             </Grid>
             <Grid item xs={12} md>
               <BlockSection

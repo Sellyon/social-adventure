@@ -39,13 +39,13 @@ export default function Footer() {
       <div className={classes.footerDeco}></div>
       <div className={classes.footerBack}>
         <Grid container spacing={1} className={classes.socialIconWrapper}>
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{ margin: 'auto' }}>
             <div className={classes.socialIconContainer} style={{backgroundPositionX: '-50px'}}></div>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{ margin: 'auto' }}>
             <div className={classes.socialIconContainer} style={{backgroundPositionX: '-203px'}}></div>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{ margin: 'auto' }}>
             <div className={classes.socialIconContainer} style={{backgroundPositionX: '-254px'}}></div>
           </Grid>
         </Grid>
