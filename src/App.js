@@ -1,9 +1,10 @@
 import React from 'react';
+import API from './components/api';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
+import ImageButn from './components/imageButn';
 import BlockSection from './components/blockSection';
 import Grid from '@material-ui/core/Grid';
-import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import GroupIcon from '@material-ui/icons/Group';
@@ -19,6 +20,10 @@ export default class App extends React.Component {
       imageHeight: 0,
       generalCounter: 0,
       checked: true,
+      isLoading: true,
+      loadingErrorMessage: null,
+      newsList: null,
+      newsSelected: 0,
     };
 
     this.butnCoord = [
@@ -28,32 +33,43 @@ export default class App extends React.Component {
         y : 195,
         icon : function(){ return <InfoIcon/>}
       },
-    // "game" button values
-      {
-        x : 560,
-        y : 300,
-        icon : function(){ return <SportsEsportsIcon/>}
-      },
     // "socialGame" button values
       {
         x : 215,
         y : 305,
         icon : function(){ return <GroupIcon/>}
       },
+    // "game" button values
+      {
+        x : 560,
+        y : 300,
+        icon : function(){ return <SportsEsportsIcon/>}
+      },
     ]
-
-    // Natural width & height of the city image, setted in componentDidMount
-    this.naturalImageSize = {};
 
     this.handleClick = this.handleClick.bind(this);
   }
 
   // Clicking button consequence
-  handleClick (newValue) {
+  async handleClick (newValue) {
     if (this.state.selectedMenu !== newValue && (newValue === 0 || newValue === 1 || newValue === 2)) {
       this.setState({
         checked: false,
       });
+
+      if (newValue === 0) {
+        /*try {
+        // Load async data.
+        let userData = await API.post(window.location.href, {
+          'getNews'
+        });
+
+        console.log(userData);
+
+        } catch (e) {
+          console.log(`😱 Axios request failed: ${e}`);
+        }*/
+      }
 
       setTimeout ( () => {
         this.setState({
@@ -81,24 +97,52 @@ export default class App extends React.Component {
     });
   };
 
-  getPosRelativeToImage (coord, imageSize) {
-    return coord/imageSize+'px'
+  displayButns () {
+    let butns = this.butnCoord.map(
+      function(butn, index) {
+        return (
+          <ImageButn
+            butn={butn}
+            key={index}
+            index={index}
+            selectedMenu={this.state.selectedMenu}
+            generalCounter={this.state.generalCounter}
+            imageWidth={this.state.imageWidth}
+            imageHeight={this.state.imageHeight}
+            handleClick={this.handleClick}
+          />
+        )
+      }, this
+    )
+    return butns
   }
 
-  // Here we set color and opacity of button : opacity to 1 is selected menu is linked to this button and a slightly saturated color
-  bgColorButnValue (index) {
-    if (index !== this.state.selectedMenu) {
-      return 'rgba(194, 18, 26, '+(Math.abs(Math.sin(this.state.generalCounter / 10))+1)/2+')'
-    } else {
-      return 'rgba(255, 11, 22, '+1+')'
-    }
-  }
-
-  componentDidMount() {
-    this.naturalImageSize = {width:document.getElementById('town').naturalWidth,height:document.getElementById('town').naturalHeight}
+  async componentDidMount() {
     this.generalCounterIncrementation();
     window.addEventListener('load', this.updateDimensions);
     window.addEventListener('resize', this.updateDimensions);
+
+    try {
+      // Load async data.
+      let newsList = await API.post('/', {request:'getNews'});
+
+      console.log(newsList.data)
+
+      // Update state with new data and re-render our component.
+      newsList = newsList.data;
+
+      this.setState({
+        ...this.state, ...{
+          isLoading: false,
+          newsList
+        }
+      });
+    } catch (e) {
+      console.log(`😱 Axios request failed: ${e}`);
+      this.setState({
+        loadingErrorMessage: `😱 Axios request failed: ${e}`,
+      });
+    }
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions);
@@ -114,29 +158,19 @@ export default class App extends React.Component {
             <Grid item xs={12} md>
               <img src="/images/backgrounds/town.gif" id="town" alt="animated isometric city"/>
               {this.butnCoord && 
-                this.butnCoord.map(
-                  function(butn, index) {
-                    return (
-                      <div className="font-icon-wrapper" onClick={(e) => this.handleClick(index)} value={index} key = {index}>
-                        <Fab 
-                          size="small"
-                          color="secondary"
-                          aria-label="add"
-                          style={{position:'absolute', left:this.getPosRelativeToImage(this.state.imageWidth*butn.x, this.naturalImageSize.width), top:this.getPosRelativeToImage(this.state.imageHeight*butn.y, this.naturalImageSize.height), width:40, height:40, backgroundColor: this.bgColorButnValue(index),}}
-                        >
-                        {butn.icon()}
-                        </Fab>
-                      </div>
-                    )
-                  }, this
-                )
+                this.displayButns()
               }
             </Grid>
             <Grid item xs={12} md>
               <BlockSection
+                style={{minHeight:"250px"}}
                 checked={this.state.checked}
                 selectedMenu={this.state.selectedMenu}
                 imageHeight={this.state.imageHeight}
+                newsList={this.state.newsList}
+                newsSelected={this.state.newsSelected}
+                isLoading={this.state.isLoading}
+                loadingErrorMessage={this.state.loadingErrorMessage}
               />
             </Grid>
           </Grid>

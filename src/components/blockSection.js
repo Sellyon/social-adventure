@@ -1,4 +1,5 @@
 import React from 'react';
+import News from './news';
 import { makeStyles, Paper, Typography, Grow } from '@material-ui/core/';
 
 const useStyles = makeStyles(theme => ({
@@ -38,7 +39,12 @@ export default function PaperSheet(props) {
     // Les news
     if (props.selectedMenu === 0) {
       return <div>
-        pouet
+        <News
+          newsList={props.newsList}
+          newsSelected={props.newsSelected}
+          isLoading={props.isLoading}
+          loadingErrorMessage={props.loadingErrorMessage}
+        />
       </div>
     }
 
@@ -58,9 +64,9 @@ export default function PaperSheet(props) {
   }
 
   return (
-    <div style={{height:props.imageHeight}}>
+    <div style={{height:props.imageHeight, minHeight:"250px"}}>
     <Grow in={props.checked}>
-      <Paper className={classes.root} style={{height:props.imageHeight, boxSizing:'border-box'}}>
+      <Paper className={classes.root} style={{height:props.imageHeight, minHeight:"250px", boxSizing:'border-box'}}>
         <Typography variant="h5" component="h3">
           {elements[props.selectedMenu].mainTitle}
         </Typography>
