@@ -17,11 +17,13 @@
     "path": "^0.12.7",
     "prop-types": "^15.7.2",
     "pug": "^2.0.4",
-    "react": "^16.10.2",
+    "react": "^16.11.0",
     "react-dom": "^16.10.2",
     "react-moment": "^0.9.6",
     "react-scripts": "3.2.0",
-    "socket.io": "^2.3.0"
+    "react-swipe": "^6.0.4",
+    "socket.io": "^2.3.0",
+    "swipe-js-iso": "^2.1.5"
   },
   "scripts": {
     "start": "node server.js",

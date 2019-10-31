@@ -1,5 +1,6 @@
 import React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ReactSwipe from 'react-swipe';
 
 class News extends React.Component {
   render() {
@@ -12,34 +13,57 @@ class News extends React.Component {
       </div>
     );
 
-    const newsDetails = (
+    let reactSwipeEl;
+
+    const swipeArea = (
       <div>
-        <h3>{newsList && newsList.length > 0 && newsList[newsSelected].title}</h3>
-        <h4>par {newsList && newsList.length > 0 && newsList[newsSelected].author}</h4>
-        <p style={{ display: "none" }}>{newsList && newsList.length > 0 && newsList[newsSelected].content}</p>
-        <p>publié depuis : {Math.round((newsList && newsList.length > 0 && Date.now()-newsList[newsSelected].date)/3600000)}h</p>
-        <p>likes : {newsList && newsList.length > 0 && newsList[newsSelected].likes.length}</p>
+        <ReactSwipe
+          className="carousel"
+          swipeOptions={{ continuous: false }}
+          ref={el => (reactSwipeEl = el)}
+        >
+          {newsList && newsList.length > 0 && 
+          newsList.map(
+            function(news, index) {
+              return (
+                <div
+                  key={index}
+                >
+                  <h3>{news.title}</h3>
+                  <h4>par {news.author}</h4>
+                  <p style={{ display: "none" }}>{news.content}</p>
+                  <p>publié depuis : {Math.round((Date.now()-news.date)/3600000)}h</p>
+                  <p>likes : {news.likes.length}</p>
+                </div>
+              )
+            }, this
+          )}
+        </ReactSwipe>
+        <button onClick={() => reactSwipeEl.next()}>Next</button>
+        <button onClick={() => reactSwipeEl.prev()}>Previous</button>
       </div>
-    );
+    )
 
     const errorMessage = <span>{this.props.loadingErrorMessage}</span>;
 
     const loadingMessage = (
-      <div>
-        <CircularProgress color="secondary" />
+      <div style ={{ textAlign: 'center', paddingTop: '10%', }}>
+        <CircularProgress
+        color='secondary'
+        size={80}
+        thickness={4}
+      />
       </div>
     );
 
-    console.log(isLoading)
-
     return (
       <div
-        style={{ width: "90%", margin: "auto" }}
+        style={{ width: "90%", margin: "auto", }}
       >
         {
           loadingErrorMessage !== null ? errorMessage :
           isLoading ? loadingMessage : 
-          newsList && newsList.length > 0 ? newsDetails :
+          newsList && newsList.length > 0 ? swipeArea :
           noNews
         }
       </div>
