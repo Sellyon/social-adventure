@@ -126,8 +126,6 @@ export default class App extends React.Component {
       // Load async data.
       let newsList = await API.post('/', {request:'getNews'});
 
-      console.log(newsList.data)
-
       // Update state with new data and re-render our component.
       newsList = newsList.data;
 
@@ -154,7 +152,7 @@ export default class App extends React.Component {
       <React.Fragment>
         <div className="App">
           <Navbar />
-          <Grid container>
+          <Grid container id="mainContainer">
             <Grid item xs={12} md>
               <img src="/images/backgrounds/town.gif" id="town" alt="animated isometric city"/>
               {this.butnCoord && 
@@ -163,7 +161,7 @@ export default class App extends React.Component {
             </Grid>
             <Grid item xs={12} md>
               <BlockSection
-                style={{minHeight:"250px"}}
+                style={{minHeight:"325px"}}
                 checked={this.state.checked}
                 selectedMenu={this.state.selectedMenu}
                 imageHeight={this.state.imageHeight}

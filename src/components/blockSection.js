@@ -1,6 +1,7 @@
 import React from 'react';
 import News from './news';
-import { makeStyles, Paper, Typography, Grow } from '@material-ui/core/';
+import { makeStyles, Paper, Typography, Grow, Grid, Button } from '@material-ui/core/';
+import PublishIcon from '@material-ui/icons/Publish';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,8 +21,8 @@ export default function PaperSheet(props) {
 
   const elements = [
     {
-      mainTitle: 'Les News',
-      mainTexte: 'Les dernières news',
+      mainTitle: 'Les Actus',
+      mainTexte: 'Les dernières actus...',
     }, 
     {
       mainTitle: 'Social RPG',
@@ -44,6 +45,7 @@ export default function PaperSheet(props) {
           newsSelected={props.newsSelected}
           isLoading={props.isLoading}
           loadingErrorMessage={props.loadingErrorMessage}
+          imageHeight={props.imageHeight}
         />
       </div>
     }
@@ -64,12 +66,21 @@ export default function PaperSheet(props) {
   }
 
   return (
-    <div style={{height:props.imageHeight, minHeight:"250px"}}>
+    <div style={{height:props.imageHeight, minHeight:"325px"}}>
     <Grow in={props.checked}>
-      <Paper className={classes.root} style={{height:props.imageHeight, minHeight:"250px", boxSizing:'border-box'}}>
-        <Typography variant="h5" component="h3">
-          {elements[props.selectedMenu].mainTitle}
-        </Typography>
+      <Paper className={classes.root} style={{height:props.imageHeight, minHeight:"325px", boxSizing:'border-box'}}>
+        <Grid container>
+          <Grid item xs>
+            <Typography variant="h5" component="h3">
+              {elements[props.selectedMenu].mainTitle}
+            </Typography>
+          </Grid>
+          {props.selectedMenu === 0 &&
+            <Grid item xs>
+              <Button title="Publier une actu" onClick={() => 0}><PublishIcon/></Button>
+            </Grid>
+          }
+        </Grid>
         <Typography component="p">
           {elements[props.selectedMenu].mainTexte}
         </Typography>

@@ -47,8 +47,15 @@ body {
   max-width: 710px;
 }
 
+#mainContainer {
+  display: inline-block;
+}
+
 @media screen and (max-width: 960px) {
   .footerWrapper: {
     position: 'relative';
+  }
+  #mainContainer: {
+    display: 'flex';
   }
 }
