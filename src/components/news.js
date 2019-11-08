@@ -5,7 +5,7 @@ import NewsContent from './newsContent';
 import ReactSwipe from 'react-swipe';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+/*import FavoriteIcon from '@material-ui/icons/Favorite';*/
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
@@ -30,7 +30,7 @@ componentDidMount() {
   }, 300);
 }
   render() {
-    const { newsList, isLoading, loadingErrorMessage, newsSelected } = this.props;
+    const { newsList, isLoading, loadingErrorMessage } = this.props;
 
     const noNews = (
       <div>

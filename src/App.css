@@ -41,19 +41,21 @@ body {
 .footerSavior {
   height: 200px;
 }
+.ScalableHeight{
+  min-height:0px;
+}
 
 #town {
   width:100%;
   max-width: 710px;
 }
 
-#mainContainer {
-  display: inline-block;
-}
-
 @media screen and (max-width: 960px) {
   .footerWrapper: {
     position: 'relative';
+  }
+  .ScalableHeight{
+    min-height:325px;
   }
   #mainContainer: {
     display: 'flex';

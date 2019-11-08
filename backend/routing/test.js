@@ -33,12 +33,12 @@ router.use(session({
 }));
 
 router.get('/', function(req, res) {
-	let connected = false;
+	/*let connected = false;
 	if (req.session && req.session.user) {
 		connected = true;
-	}
+	}*/
     res.sendFile(path.join(__dirname, '../../build/index.html'));
-    res.locals.data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected };
+   /* res.locals.data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected };*/
 });
 
 router.post('/', function(req, res) {
@@ -54,6 +54,16 @@ router.post('/', function(req, res) {
 				client.close();
 			});
 		});
+	}
+
+	// get user's data
+	if (req.body.request && req.body.request === 'getUser') {
+		let connected = false;
+		if (req.session && req.session.user) {
+			connected = true;
+		}
+		data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected };
+		res.json(data)
 	}
 });
 

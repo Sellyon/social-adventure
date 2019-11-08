@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@material-ui/core/';
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+/*import FavoriteIcon from '@material-ui/icons/Favorite';*/
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';

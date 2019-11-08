@@ -24,6 +24,7 @@ export default class App extends React.Component {
       loadingErrorMessage: null,
       newsList: null,
       newsSelected: 0,
+      userDatas: null,
     };
 
     this.butnCoord = [
@@ -122,6 +123,7 @@ export default class App extends React.Component {
     window.addEventListener('load', this.updateDimensions);
     window.addEventListener('resize', this.updateDimensions);
 
+    // Fetch data to populate news
     try {
       // Load async data.
       let newsList = await API.post('/', {request:'getNews'});
@@ -138,8 +140,25 @@ export default class App extends React.Component {
     } catch (e) {
       console.log(`😱 Axios request failed: ${e}`);
       this.setState({
-        loadingErrorMessage: `😱 Axios request failed: ${e}`,
+        loadingErrorMessage: `😱 Axios request getNews failed: ${e}`,
       });
+    }
+
+    // Fetch data to populate user's values
+    try {
+      // Load async data.
+      let userDatas = await API.post('/', {request:'getUser'});
+
+      // Update state with new data and re-render our component.
+      userDatas = userDatas.data;
+
+      this.setState({
+        ...this.state, ...{
+          userDatas
+        }
+      });
+    } catch (e) {
+      console.log(`😱 Axios request getUser failed: ${e}`);
     }
   }
   componentWillUnmount() {
@@ -151,16 +170,19 @@ export default class App extends React.Component {
     return (
       <React.Fragment>
         <div className="App">
-          <Navbar />
+          <Navbar
+            userDatas={this.state.userDatas}
+          />
           <Grid container id="mainContainer">
-            <Grid item xs={12} md>
+            <Grid item xs={12} md={6} style={{maxWidth:'710px'}}>
               <img src="/images/backgrounds/town.gif" id="town" alt="animated isometric city"/>
               {this.butnCoord && 
                 this.displayButns()
               }
             </Grid>
-            <Grid item xs={12} md>
+            <Grid item xs={12} md={6}>
               <BlockSection
+                className='ScalableHeight'
                 style={{minHeight:"325px"}}
                 checked={this.state.checked}
                 selectedMenu={this.state.selectedMenu}

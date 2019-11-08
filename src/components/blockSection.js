@@ -1,23 +1,10 @@
 import React from 'react';
 import News from './news';
-import { makeStyles, Paper, Typography, Grow, Grid, Button } from '@material-ui/core/';
+import { Paper, Typography, Grow, Grid, Button } from '@material-ui/core/';
 import PublishIcon from '@material-ui/icons/Publish';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(3, 2),
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+import clsx from 'clsx';
 
 export default function PaperSheet(props) {
-  const classes = useStyles();
 
   const elements = [
     {
@@ -66,9 +53,9 @@ export default function PaperSheet(props) {
   }
 
   return (
-    <div style={{height:props.imageHeight, minHeight:"325px"}}>
+    <div className='ScalableHeight' style={{height:props.imageHeight}}>
     <Grow in={props.checked}>
-      <Paper className={classes.root} style={{height:props.imageHeight, minHeight:"325px", boxSizing:'border-box'}}>
+      <Paper className={clsx('classes.root','ScalableHeight')} style={{height:props.imageHeight, boxSizing:'border-box'}}>
         <Grid container>
           <Grid item xs>
             <Typography variant="h5" component="h3">
