@@ -41,6 +41,10 @@ componentDidMount() {
 
     let reactSwipeEl;
 
+    const handleLike = () => {
+      console.log('Like !');
+    }
+
     const swipeArea = (
       <div>
         <ReactSwipe
@@ -55,10 +59,10 @@ componentDidMount() {
                 <div key={index}>
                   <h3>{news.title}</h3>
                   <h4>par {news.author}</h4>
-                  <NewsContent news={news}/>
+                  <NewsContent news={news} checkUser={this.props.checkUser}/>
                   <p style ={{ display:'inline-block'}}><ScheduleIcon/>{Math.round((Date.now()-news.date)/3600000)}h</p>
                   <p style ={{ display:'inline-block',float: 'right'}}>
-                  <Button title="Liker">
+                  <Button title="Liker" onClick={ () => this.props.checkUser('warning','Vous devez être connecté pour liker une actu.', handleLike) }>
                     <FavoriteBorderIcon/>({news.likes.length})
                   </Button></p>
                 </div>
@@ -92,10 +96,11 @@ componentDidMount() {
                   <h4>par auteur bidon</h4>
                   <NewsContent
                     news={{title:"News test n°"+index,author:"auteur bidon",date:Math.round(Date.now()/3600000),likes:index,content:placeholderText,}}
+                    checkUser={this.props.checkUser}
                   />
                   <p style ={{ display:'inline-block'}}><ScheduleIcon/>{Math.round(Date.now()/3600000)}h</p>
                   <p style ={{ display:'inline-block',float: 'right'}}>
-                  <Button title="Liker">
+                  <Button title="Liker" onClick={ () => this.props.checkUser('warning','Vous devez être connecté pour liker une actu.', handleLike) }>
                     <FavoriteBorderIcon/>({index})
                   </Button></p>
                 </div>

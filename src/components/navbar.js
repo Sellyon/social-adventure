@@ -1,12 +1,6 @@
 import React from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import { Badge, AppBar, Toolbar, IconButton, Typography, MenuItem, Menu, Avatar } from '@material-ui/core/';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -94,6 +88,14 @@ export default function PrimarySearchAppBar(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const openMails = () => {
+    console.log(props.userDatas.profil+' veut consulter ses mails')
+  }
+
+  const openNotifications = () => {
+    console.log(props.userDatas.profil+' veut consulter ses notifications')
+  }
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -151,7 +153,7 @@ export default function PrimarySearchAppBar(props) {
     </Menu>
   );
 
-  let colorIcon = 'disabled';
+  let colorIcon = 'default';
 
   if (props.userDatas && props.userDatas.connected) {
     colorIcon = 'inherit';
@@ -174,12 +176,20 @@ export default function PrimarySearchAppBar(props) {
             {props.userDatas && props.userDatas.profil}
           </Typography>
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color={colorIcon}>
+            <IconButton
+              aria-label="show 4 new mails"
+              color={colorIcon}
+              onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos mails.', openMails)}
+            >
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color={colorIcon}>
+            <IconButton
+              aria-label="show 17 new notifications"
+              color={colorIcon}
+              onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos notifications.', openNotifications)}
+            >
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -192,7 +202,10 @@ export default function PrimarySearchAppBar(props) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              {(!props.userDatas || !props.userDatas.connected) ? <AccountCircle /> : <AccountCircle />
+              {(!props.userDatas || !props.userDatas.connected) ? <AccountCircle /> : (<Avatar
+                  alt={"Avatar de " + props.userDatas.name}
+                  src={props.userDatas.avatar}
+                />)
               }
             </IconButton>
           </div>

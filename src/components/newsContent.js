@@ -22,6 +22,18 @@ export default function AlertDialogSlide(props) {
     setOpen(false);
   };
 
+  const handleComment = () => {
+    console.log('comment')
+  };
+
+  const handleLike = () => {
+    console.log('like')
+  };
+
+  const handleDelete = () => {
+    console.log('delete')
+  };
+
   return (
     <div>
       <Button title="Lire l'actu" color="primary" onClick={handleClickOpen}>
@@ -44,15 +56,16 @@ export default function AlertDialogSlide(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button title="Commenter" onClick={handleClose} color="primary">
+          <Button title="Commenter" onClick={() => props.checkUser('warning','Vous devez être connecté pour commenter une actu.', handleComment)} color="primary">
             <CommentIcon/>
           </Button>
-          <Button title="Liker" onClick={handleClose} color="primary">
+          <Button title="Liker" onClick={() => props.checkUser('warning','Vous devez être connecté pour liker une actu.', handleLike)} color="primary">
             <FavoriteBorderIcon/> ({props.news.likes.length})
           </Button>
-          <Button title="Effacer l'actu" onClick={handleClose} color="primary">
+          {props.userDatas && props.userDatas.connected && (props.userDatas.profil === props.news.author || props.userDatas.admin) &&
+          <Button title="Effacer l'actu" onClick={handleDelete} color="primary">
             <DeleteIcon/>
-          </Button>
+          </Button>}
         </DialogActions>
       </Dialog>
     </div>

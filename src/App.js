@@ -4,6 +4,7 @@ import Navbar from './components/navbar';
 import Footer from './components/footer';
 import ImageButn from './components/imageButn';
 import BlockSection from './components/blockSection';
+import Snackbar from './components/snackbar';
 import Grid from '@material-ui/core/Grid';
 import InfoIcon from '@material-ui/icons/Info';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
@@ -25,6 +26,9 @@ export default class App extends React.Component {
       newsList: null,
       newsSelected: 0,
       userDatas: null,
+      snackbarOpen: false,
+      snackbarMessage: '',
+      snackbarStatus: 'info',
     };
 
     this.butnCoord = [
@@ -49,6 +53,7 @@ export default class App extends React.Component {
     ]
 
     this.handleClick = this.handleClick.bind(this);
+    this.checkUser = this.checkUser.bind(this)
   }
 
   // Clicking button consequence
@@ -78,6 +83,37 @@ export default class App extends React.Component {
           selectedMenu: newValue,
         });
       },300)
+    }
+  }
+
+  snackbarHandleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      snackbarOpen: false,
+    });
+  }
+
+  checkUser = (status, message, validFunction) => {
+    if (this.state.userDatas && this.state.userDatas.connected) {
+      if (validFunction && typeof validFunction === 'function') {  
+        validFunction();
+      }
+    } else {  
+      if (!status || !message) {
+        this.setState({
+          snackbarOpen: true,
+          snackbarStatus: 'error',
+          snackbarMessage: 'une erreur s\'est produite',
+        }); 
+      } else {
+        this.setState({
+          snackbarOpen: true,
+          snackbarStatus: status,
+          snackbarMessage: message,
+        });
+      }
     }
   }
 
@@ -171,6 +207,7 @@ export default class App extends React.Component {
       <React.Fragment>
         <div className="App">
           <Navbar
+            checkUser={this.checkUser}
             userDatas={this.state.userDatas}
           />
           <Grid container id="mainContainer">
@@ -182,6 +219,8 @@ export default class App extends React.Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <BlockSection
+                userDatas={this.state.userDatas}
+                checkUser={this.checkUser}
                 className='ScalableHeight'
                 style={{minHeight:"325px"}}
                 checked={this.state.checked}
@@ -197,6 +236,12 @@ export default class App extends React.Component {
         <div className="footerSavior"></div>
         <Footer/>
         </div>
+        <Snackbar
+          handleClose={this.snackbarHandleClose}
+          open={this.state.snackbarOpen}
+          message={this.state.snackbarMessage}
+          status={this.state.snackbarStatus}
+        />
       </React.Fragment>
     );
   }
