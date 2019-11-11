@@ -5,7 +5,7 @@ import NewsContent from './newsContent';
 import ReactSwipe from 'react-swipe';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-/*import FavoriteIcon from '@material-ui/icons/Favorite';*/
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
@@ -16,19 +16,45 @@ class News extends React.Component {
 
     this.state = { 
       loadingNews: true,
+      commentValue: '',
       arrowColorLeft: '#ccc9c9',
       arrowColorRight: '#9b49ff',
     };
+
+    this.checkUserLike = this.checkUserLike.bind(this)
+    this.updateCommentValue = this.updateCommentValue.bind(this)
   }
 
-componentDidMount() {
-  let that=this;
-  setTimeout(function(){
-    that.setState({
-      loadingNews: false,
+  updateCommentValue (e) {
+    this.setState({
+      commentValue: e.target.value,
     });
-  }, 300);
-}
+  }
+
+  componentDidMount() {
+    let that=this;
+    setTimeout(function(){
+      that.setState({
+        loadingNews: false,
+      });
+    }, 300);
+  }
+
+  checkUserLike (data) {
+    let userHasLikedThis = false;
+    if (data && data.likes) {
+      const likes = data.likes;
+      if (this.props && this.props.userDatas && this.props.userDatas.profil && likes.length > 0) {
+        for (var i = 0; i < likes.length; i++) {
+          if (likes[i] === this.props.userDatas.profil) {
+            userHasLikedThis = true;
+          }
+        }
+      }
+    }
+    return userHasLikedThis
+  }
+
   render() {
     const { newsList, isLoading, loadingErrorMessage } = this.props;
 
@@ -40,10 +66,6 @@ componentDidMount() {
     );
 
     let reactSwipeEl;
-
-    const handleLike = () => {
-      console.log('Like !');
-    }
 
     const swipeArea = (
       <div>
@@ -59,11 +81,24 @@ componentDidMount() {
                 <div key={index}>
                   <h3>{news.title}</h3>
                   <h4>par {news.author}</h4>
-                  <NewsContent news={news} checkUser={this.props.checkUser}/>
+                  <NewsContent
+                    news={news}
+                    commentValue={this.state.commentValue}
+                    updateCommentValue={this.updateCommentValue}
+                    handleComment={this.props.handleComment}
+                    loadRequest={this.props.loadRequest}
+                    handleLike={this.props.handleLike}
+                    userDatas={this.props.userDatas}
+                    checkUser={this.props.checkUser}
+                    checkUserLike={this.checkUserLike}
+                    handleLikeComment={this.props.handleLikeComment}
+                  />
                   <p style ={{ display:'inline-block'}}><ScheduleIcon/>{Math.round((Date.now()-news.date)/3600000)}h</p>
                   <p style ={{ display:'inline-block',float: 'right'}}>
-                  <Button title="Liker" onClick={ () => this.props.checkUser('warning','Vous devez être connecté pour liker une actu.', handleLike) }>
-                    <FavoriteBorderIcon/>({news.likes.length})
+                  <Button title="Liker" onClick={ () => this.props.checkUser('warning','Vous devez être connecté pour liker une actu.', this.props.handleLike, news) }>
+                    {this.props.loadRequest ? <CircularProgress color='secondary' size={20} thickness={2}/> :
+                      this.checkUserLike(news) ? <FavoriteIcon/> : 
+                      <FavoriteBorderIcon/>} ({news.likes.length})
                   </Button></p>
                 </div>
               )
@@ -114,10 +149,10 @@ componentDidMount() {
     const loadingMessage = (
       <div style ={{ textAlign: 'center', paddingTop: '10%', }}>
         <CircularProgress
-        color='secondary'
-        size={80}
-        thickness={4}
-      />
+          color='secondary'
+          size={80}
+          thickness={4}
+        />
       </div>
     );
 

@@ -28,12 +28,17 @@ export default function PaperSheet(props) {
     if (props.selectedMenu === 0) {
       return <div>
         <News
+          loadRequest={props.loadRequest}
+          handleLike={props.handleLike}
+          handleComment={props.handleComment}
+          userDatas={props.userDatas}
           checkUser={props.checkUser}
           newsList={props.newsList}
           newsSelected={props.newsSelected}
           isLoading={props.isLoading}
           loadingErrorMessage={props.loadingErrorMessage}
           imageHeight={props.imageHeight}
+          handleLikeComment={props.handleLikeComment}
         />
       </div>
     }
@@ -69,7 +74,7 @@ export default function PaperSheet(props) {
           </Grid>
             {props.selectedMenu === 0 &&
             <Grid item xs>
-              <Button title="Publier une actu" onClick={() => props.checkUser('warning','Vous devez être connecté pour publier une actu.', openPublishForm)}><AddCommentIcon/></Button>
+              <Button title="Publier une actu" onClick={() => props.checkUser('warning','Vous devez être connecté pour publier une actu.', openPublishForm)}><AddCommentIcon style={{height:'48px', width:'48px', color:'#9B49FF'}}/></Button>
             </Grid>
             }
         </Grid>

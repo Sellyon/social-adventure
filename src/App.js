@@ -29,6 +29,7 @@ export default class App extends React.Component {
       snackbarOpen: false,
       snackbarMessage: '',
       snackbarStatus: 'info',
+      loadRequest: false,
     };
 
     this.butnCoord = [
@@ -63,20 +64,6 @@ export default class App extends React.Component {
         checked: false,
       });
 
-      if (newValue === 0) {
-        /*try {
-        // Load async data.
-        let userData = await API.post(window.location.href, {
-          'getNews'
-        });
-
-        console.log(userData);
-
-        } catch (e) {
-          console.log(`😱 Axios request failed: ${e}`);
-        }*/
-      }
-
       setTimeout ( () => {
         this.setState({
           checked: true,
@@ -95,10 +82,12 @@ export default class App extends React.Component {
     });
   }
 
-  checkUser = (status, message, validFunction) => {
+  checkUser = (status, message, validFunction, args) => {
     if (this.state.userDatas && this.state.userDatas.connected) {
       if (validFunction && typeof validFunction === 'function') {  
-        validFunction();
+        validFunction(args);
+      } else {
+        console.log('Error : function or argument invalid, please check function : ' + validFunction + ' ; or argument : ' + args)
       }
     } else {  
       if (!status || !message) {
@@ -114,6 +103,112 @@ export default class App extends React.Component {
           snackbarMessage: message,
         });
       }
+    }
+  }
+
+  handleLike = (news) => {
+    if (!this.state.loadRequest && news) {
+      this.setState({
+        loadRequest: true
+      }, async () => {
+        // Fetch data to update news
+        try {
+          // Load async data.
+          let updatedNews = await API.post('/', {request:'likeNews',news:news});
+          let newsList = JSON.parse(JSON.stringify(this.state.newsList));
+
+          for (var i = 0; i < newsList.length; i++) {
+            if (newsList[i]._id === updatedNews.data._id) {
+              newsList[i] = updatedNews.data
+            }
+          }
+
+          this.setState({
+            ...this.state, ...{
+              newsList
+            },
+            loadRequest: false
+          });
+        } catch (e) {
+          console.log(`😱 Axios request failed: ${e}`);
+          this.setState({
+            loadingErrorMessage: `😱 Axios request likeNews failed: ${e} on news ${news}`,
+            loadRequest: false
+          });
+        }
+      });
+    }
+  }
+
+  handleLikeComment = (args) => {
+    let news = args.news;
+    let comment = args.comment;
+
+    if (!this.state.loadRequest && news) {
+      this.setState({
+        loadRequest: true
+      }, async () => {
+        // Fetch data to update news
+        try {
+          // Load async data.
+          let updatedNews = await API.post('/', {request:'likeComment',news:news, comment:comment});
+          let newsList = JSON.parse(JSON.stringify(this.state.newsList));
+
+          for (var i = 0; i < newsList.length; i++) {
+            if (newsList[i]._id === updatedNews.data._id) {
+              newsList[i] = updatedNews.data
+            }
+          }
+
+          this.setState({
+            ...this.state, ...{
+              newsList
+            },
+            loadRequest: false
+          });
+        } catch (e) {
+          console.log(`😱 Axios request failed: ${e}`);
+          this.setState({
+            loadingErrorMessage: `😱 Axios request likeComment failed: ${e} on news ${news}`,
+            loadRequest: false
+          });
+        }
+      });
+    }
+  }
+
+  handleComment = (comment, news, callback) => {
+    console.log(comment, news, callback)
+    if (!this.state.loadRequest && news) {
+      this.setState({
+        loadRequest: true
+      }, async () => {
+        // Fetch data to update news with adding comment
+        try {
+          // Load async data.
+          let updatedNews = await API.post('/', {request:'addComment',news:news,comment:comment});
+          let newsList = JSON.parse(JSON.stringify(this.state.newsList));
+
+          for (var i = 0; i < newsList.length; i++) {
+            if (newsList[i]._id === updatedNews.data._id) {
+              newsList[i] = updatedNews.data
+            }
+          }
+
+          this.setState({
+            ...this.state, ...{
+              newsList
+            },
+            loadRequest: false
+          }, () => callback());
+        } catch (e) {
+          console.log(`😱 Axios request failed: ${e}`);
+          this.setState({
+            loadingErrorMessage: `😱 Axios request add comment failed: ${e} on news ${news}`,
+            loadRequest: false
+          }, () => callback());
+        }
+      });
     }
   }
 
@@ -219,8 +314,10 @@ export default class App extends React.Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <BlockSection
+                handleLike={this.handleLike}
                 userDatas={this.state.userDatas}
                 checkUser={this.checkUser}
+                handleComment={this.handleComment}
                 className='ScalableHeight'
                 style={{minHeight:"325px"}}
                 checked={this.state.checked}
@@ -230,6 +327,8 @@ export default class App extends React.Component {
                 newsSelected={this.state.newsSelected}
                 isLoading={this.state.isLoading}
                 loadingErrorMessage={this.state.loadingErrorMessage}
+                loadRequest={this.state.loadRequest}
+                handleLikeComment={this.handleLikeComment}
               />
             </Grid>
           </Grid>

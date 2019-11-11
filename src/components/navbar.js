@@ -17,12 +17,12 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {
+  /*title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
-  },
+  },*/
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -51,13 +51,13 @@ const useStyles = makeStyles(theme => ({
   },
   sectionDesktop: {
     display: 'none',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up(320)]: {
       display: 'flex',
     },
   },
   sectionMobile: {
     display: 'flex',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up(320)]: {
       display: 'none',
     },
   },
