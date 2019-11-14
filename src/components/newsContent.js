@@ -7,6 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useSwipeable, Swipeable } from 'react-swipeable'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,12 +33,15 @@ export default function AlertDialogSlide(props) {
     setOpenForm(false);
   };
 
-  const handleDelete = () => {
-    console.log('delete')
+  const handleSwipe = (e) => {
+    console.log(e)
   };
 
   return (
-    <div>
+    <Swipeable
+      onSwiped={(e) => handleSwipe(e)}
+      trackMouse={true}
+    >
       <Button title="Lire l'actu" color="primary" onClick={handleClickOpen}>
         {props.news.content.slice(0, 50)+"..."}<OpenInBrowserIcon/>
       </Button>
@@ -48,6 +52,7 @@ export default function AlertDialogSlide(props) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        scroll='body'
       >
         <DialogTitle id="alert-dialog-slide-title">{props.news.title}</DialogTitle>
         <DialogContent>
@@ -67,7 +72,7 @@ export default function AlertDialogSlide(props) {
               <FavoriteBorderIcon/>} ({props.news.likes.length})
           </Button>
           {props.userDatas && props.userDatas.connected && (props.userDatas.profil === props.news.author || props.userDatas.admin) &&
-          <Button title="Effacer l'actu" onClick={handleDelete} color="primary">
+          <Button title="Effacer l'actu" onClick={() => props.deleteNews(props.news, handleClose)} color="primary">
             <DeleteIcon/>
           </Button>}
         </DialogActions>
@@ -82,17 +87,19 @@ export default function AlertDialogSlide(props) {
                   (' · ' + Math.round((Date.now()-comment.date)/60000) + 'mn')}
                 </Typography>
                 <Typography>
-                  {comment.content}
+                  {comment.deleted ? <span style={{ fontStyle:'italic' }}>Message supprimé</span> : comment.content }
                 </Typography>
               </CardContent>
               <CardActions>
+              {!comment.deleted &&
                 <Button title="Liker" onClick={() => props.checkUser('warning','Vous devez être connecté pour liker une actu.', props.handleLikeComment, {news:props.news, comment:comment})} color="primary">
                   {props.loadRequest ? <CircularProgress color='secondary' size={20} thickness={2}/> :
                     props.checkUserLike(comment) ? <FavoriteIcon/> : 
                     <FavoriteBorderIcon/>} ({comment.likes.length})
                 </Button>
-                {props.userDatas && props.userDatas.connected && (props.userDatas.profil === comment.author || props.userDatas.admin) &&
-                <Button title="Effacer l'actu" onClick={handleDelete} color="primary">
+              }
+                {props.userDatas && props.userDatas.connected && !comment.deleted && (props.userDatas.profil === comment.author || props.userDatas.admin) &&
+                <Button title="Effacer l'actu" onClick={() => props.deleteComment(comment, props.news)} color="primary">
                   <DeleteIcon/>
                 </Button>}
               </CardActions>
@@ -119,6 +126,9 @@ export default function AlertDialogSlide(props) {
             type="text"
             onChange={ props.updateCommentValue }
             fullWidth
+            multiline
+            error={props.commentValue.length > 430}
+            helperText="minimun 1 caractère, au maximum 430."
           />
         </DialogContent>
         <DialogActions>
@@ -130,6 +140,6 @@ export default function AlertDialogSlide(props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Swipeable>
   );
 }

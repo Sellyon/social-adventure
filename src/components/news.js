@@ -17,7 +17,7 @@ class News extends React.Component {
     this.state = { 
       loadingNews: true,
       commentValue: '',
-      arrowColorLeft: '#ccc9c9',
+      arrowColorLeft: '#9b49ff',
       arrowColorRight: '#9b49ff',
     };
 
@@ -68,10 +68,10 @@ class News extends React.Component {
     let reactSwipeEl;
 
     const swipeArea = (
-      <div>
+      <>
         <ReactSwipe
           className="carousel"
-          swipeOptions={{ continuous: false }}
+          childCount={newsList && newsList.length}
           ref={el => (reactSwipeEl = el)}
         >
           {newsList && newsList.length > 0 && 
@@ -83,6 +83,8 @@ class News extends React.Component {
                   <h4>par {news.author}</h4>
                   <NewsContent
                     news={news}
+                    deleteNews={this.props.deleteNews}
+                    deleteComment={this.props.deleteComment}
                     commentValue={this.state.commentValue}
                     updateCommentValue={this.updateCommentValue}
                     handleComment={this.props.handleComment}
@@ -105,7 +107,7 @@ class News extends React.Component {
             }, this
           )}
         </ReactSwipe>
-      </div>
+      </>
     )
 
     const errorMessage = <span>{this.props.loadingErrorMessage}</span>;
@@ -161,20 +163,8 @@ class News extends React.Component {
         <Grid container>
           {newsList && newsList.length > 0 &&
             <Grid item xs={1} style={{ marginTop:'80px' }}>
-              <Icon style={{ marginBottom:'80px' }} onClick={() => {
-                if (reactSwipeEl.getPos() > 0) {
-                  reactSwipeEl.prev();
-                  if (reactSwipeEl.getPos() === 0) {
-                    this.setState({
-                      arrowColorLeft: '#ccc9c9',
-                    });
-                  } else if (reactSwipeEl.getPos() === reactSwipeEl.getNumSlides() - 2) {
-                    this.setState({
-                      arrowColorRight: '#9b49ff',
-                    });
-                  }
-                }
-              }}><ArrowBackIosIcon style={{ color:this.state.arrowColorLeft }}/>
+              <Icon style={{ marginBottom:'80px' }} onClick={() => {reactSwipeEl.prev()}}>
+                <ArrowBackIosIcon style={{ color:this.state.arrowColorLeft }}/>
               </Icon>
             </Grid>
           }
@@ -189,20 +179,7 @@ class News extends React.Component {
           </Grid>
           {newsList && newsList.length > 0 &&
             <Grid item xs={1} style={{ marginTop:'80px' }}>
-              <Icon onClick={() => {
-                if (reactSwipeEl.getPos() < reactSwipeEl.getNumSlides()) {
-                  reactSwipeEl.next();
-                  if (reactSwipeEl.getPos() === reactSwipeEl.getNumSlides()-1) {
-                    this.setState({
-                      arrowColorRight: '#ccc9c9',
-                    });
-                  } else if (reactSwipeEl.getPos() === 1) {
-                    this.setState({
-                      arrowColorLeft: '#9b49ff',
-                    });
-                  }
-                }
-              }}>
+              <Icon onClick={() => {reactSwipeEl.next()}}>
                 <ArrowForwardIosIcon  style={{ color:this.state.arrowColorRight }}/></Icon>
             </Grid>
           }

@@ -42,12 +42,7 @@ router.use(session({
 }));
 
 router.get('/', function(req, res) {
-	/*let connected = false;
-	if (req.session && req.session.user) {
-		connected = true;
-	}*/
     res.sendFile(path.join(__dirname, '../../build/index.html'));
-   /* res.locals.data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected };*/
 });
 
 router.post('/', function(req, res) {
@@ -71,7 +66,7 @@ router.post('/', function(req, res) {
 		if (req.session && req.session.user) {
 			connected = true;
 		}
-		data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected };
+		data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected, notifNumber: req.session.notifNumber,  };
 		res.json(data)
 	}
 
@@ -174,6 +169,76 @@ router.post('/', function(req, res) {
 			        client.close();
 			    }
 			});
+		});
+	}
+
+	// Add News
+	if (req.body.request && req.body.request === 'addNews' && req.session && req.session.user) {
+		if (req.body.news && req.body.news.title && req.body.news.content) {
+			title = req.body.news.title;
+			content = req.body.news.content;
+
+			let newArticle = {
+				author: req.session.user,
+				date: Date.now(),
+				title: title,
+				content: content,
+				likes: [],
+				lastModifyDate: null,
+				modifyNumber: 0,
+				comments: []
+			}
+
+			client.connect(uri, function () {
+				myDB = client.get().db('twoPrisoners');
+				let collection = myDB.collection('articles');
+				collection.insertOne(newArticle);
+			});
+
+			res.json(newArticle);
+			client.close();
+		}
+	}
+
+	// Delete a news
+	if (req.body.request && req.body.request === 'deleteNews' && req.session && req.session.user) {
+		let comment = req.body.comment;
+		client.connect(uri, function () {
+			myDB = client.get().db('twoPrisoners');
+			let collection = myDB.collection('articles');
+		   	collection.remove( { "_id" : ObjectId(req.body.news._id) }, function(err, result) {
+	            if (err) {
+	                console.log(err);
+	            }
+				res.json('delete OK');
+				client.close();
+	        });
+		});
+	}
+
+	// 'Delete' a comment
+	if (req.body.request && req.body.request === 'deleteComment' && req.session && req.session.user) {
+		let comment = req.body.comment;
+		client.connect(uri, function () {
+			myDB = client.get().db('twoPrisoners');
+			let collection = myDB.collection('articles');
+			collection.updateOne(
+			  { 
+			    "_id" : ObjectId(req.body.news._id), 
+			    "comments.id" : comment.id},
+			  { 
+			    $set : { "comments.$.deleted" : true } 
+			  }, function(err,records){
+			  		if (err) throw err;
+			       	collection.find({"_id": ObjectId(req.body.news._id)}).toArray(function(err, data){
+						if (err) throw err;
+						if (data[0] !== undefined){
+					        res.json(data[0]);
+					        client.close();
+					    }
+					});
+			    }
+			);
 		});
 	}
 });

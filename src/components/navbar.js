@@ -88,12 +88,37 @@ export default function PrimarySearchAppBar(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleClickProfile = () => {
+    window.location.href = "/profil"
+  }
+
+  const handleClickConnect = () => {
+    window.location.href = "/login"
+  }
+
   const openMails = () => {
     console.log(props.userDatas.profil+' veut consulter ses mails')
   }
 
   const openNotifications = () => {
     console.log(props.userDatas.profil+' veut consulter ses notifications')
+  }
+
+  const getMailNumber = () => {
+    return 0
+  }
+
+  const getNotifNumber = () => {
+    if (props.userDatas && props.userDatas.notifNumber) {
+      return props.userDatas.notifNumber
+    }
+  }
+
+  const  isBadgeInvisible = (type) => {
+    if (!props.userDatas || !props.userDatas[type] || props.userDatas[type] === 0) {
+      return true
+    }
+    return false
   }
 
   const menuId = 'primary-search-account-menu';
@@ -107,8 +132,15 @@ export default function PrimarySearchAppBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {props.userDatas && props.userDatas.connected ? (
+        <>
+          <MenuItem onClick={handleClickProfile}>Mon profil</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Mon compte</MenuItem>
+        </>
+        ) : (
+          <MenuItem onClick={handleClickConnect}>Se connecter</MenuItem>
+        )
+      }
     </Menu>
   );
 
@@ -124,16 +156,16 @@ export default function PrimarySearchAppBar(props) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
+        <IconButton aria-label="show new mails" color="inherit">
+          <Badge badgeContent={getMailNumber()} color="secondary" invisible={isBadgeInvisible('mailNumber')}>
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
+        <IconButton aria-label="show new notifications" color="inherit">
+          <Badge badgeContent={getNotifNumber()} color="secondary" invisible={isBadgeInvisible('notifNumber')}>
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -163,34 +195,26 @@ export default function PrimarySearchAppBar(props) {
     <div className={classes.grow}>
       <AppBar position="static" className={classes.AppBar}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon/>
-          </IconButton>
           <div className={classes.grow} />
           <Typography className={classes.title} variant="h6" noWrap>
             {props.userDatas && props.userDatas.profil}
           </Typography>
           <div className={classes.sectionDesktop}>
             <IconButton
-              aria-label="show 4 new mails"
+              aria-label="show new mails"
               color={colorIcon}
               onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos mails.', openMails)}
             >
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
+                <Badge badgeContent={getMailNumber()} color="secondary" invisible={isBadgeInvisible('mailNumber')}>
+                  <MailIcon />
+                </Badge>
             </IconButton>
             <IconButton
-              aria-label="show 17 new notifications"
+              aria-label="show new notifications"
               color={colorIcon}
               onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos notifications.', openNotifications)}
             >
-              <Badge badgeContent={17} color="secondary">
+              <Badge badgeContent={getNotifNumber()} color="secondary" invisible={isBadgeInvisible('notifNumber')}>
                 <NotificationsIcon />
               </Badge>
             </IconButton>

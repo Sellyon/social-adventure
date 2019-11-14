@@ -1,11 +1,13 @@
 import React from 'react';
 import News from './news';
-import { Paper, Typography, Grow, Grid, Button } from '@material-ui/core/';
+import { Paper, Typography, Grow, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Card, CardContent, TextField } from '@material-ui/core/';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import clsx from 'clsx';
 
 export default function PaperSheet(props) {
-
+  const [openForm, setOpenForm] = React.useState(false);
+  const [formTitleValue, setFormTitleValue] = React.useState('');
+  const [formContentValue, setFormContentValue] = React.useState('');
   const elements = [
     {
       mainTitle: 'Les Actus',
@@ -28,6 +30,8 @@ export default function PaperSheet(props) {
     if (props.selectedMenu === 0) {
       return <div>
         <News
+          deleteNews={props.deleteNews}
+          deleteComment={props.deleteComment}
           loadRequest={props.loadRequest}
           handleLike={props.handleLike}
           handleComment={props.handleComment}
@@ -58,9 +62,13 @@ export default function PaperSheet(props) {
     }
   }
 
-  const openPublishForm = () => {
-    console.log(props.userDatas.profil+' veut publier une actu')
-  }
+  const handleOpenForm = () => {
+    setOpenForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setOpenForm(false);
+  };
 
   return (
     <div className='ScalableHeight' style={{height:props.imageHeight}}>
@@ -74,7 +82,7 @@ export default function PaperSheet(props) {
           </Grid>
             {props.selectedMenu === 0 &&
             <Grid item xs>
-              <Button title="Publier une actu" onClick={() => props.checkUser('warning','Vous devez être connecté pour publier une actu.', openPublishForm)}><AddCommentIcon style={{height:'48px', width:'48px', color:'#9B49FF'}}/></Button>
+              <Button title="Publier une actu" onClick={() => props.checkUser('warning','Vous devez être connecté pour publier une actu.', handleOpenForm)}><AddCommentIcon style={{height:'48px', width:'48px', color:'#9B49FF'}}/></Button>
             </Grid>
             }
         </Grid>
@@ -84,6 +92,52 @@ export default function PaperSheet(props) {
         {getContent()}
       </Paper>
     </Grow>
+      <Dialog
+        open={openForm}
+        onClose={handleCloseForm}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Ecrire une actu</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="titleValue"
+            label="Titre de l'actu"
+            type="text"
+            onChange={ (e) => setFormTitleValue(e.target.value) }
+            fullWidth
+            multiline
+            error={formTitleValue.length > 50}
+            helperText="minimun 1 caractère, au maximum 50."
+          />
+        </DialogContent>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            id="newsValue"
+            label="Votre message"
+            type="text"
+            onChange={ (e) => setFormContentValue(e.target.value) }
+            fullWidth
+            variant="outlined"
+            multiline={true}
+            rows={4}
+            error={formContentValue.length > 430}
+            helperText="minimun 1 caractère, au maximum 430."
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={ () => {props.addNews({title:formTitleValue, content:formContentValue}, handleCloseForm)} }
+            color="primary">
+            Valider
+          </Button>
+          <Button onClick={handleCloseForm} color="primary">
+            Annuler
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

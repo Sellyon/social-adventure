@@ -76,6 +76,7 @@ router.post('/', function(req, res) {
 					req.session.user = data[0].name;
 					req.session.avatar = data[0].avatar;
 					connected = true;
+					req.session.notifNumber = data[0].RequestYouForFriend.length;
 			  	} else {
 			  		message = 'Le mot de passe est incorrect.';
 			  	}
@@ -84,9 +85,9 @@ router.post('/', function(req, res) {
 			  }
 				client.close();
 				if (connected) {
-					res.redirect('/lobby');
+					res.redirect('/test');
 				} else {
-					res.render('login', { profil: getUserName(req), title: 'login', message: message, avatar: getAvatar(req), connected: connected});
+					res.render('login', { profil: getUserName(req), title: 'login', message: message, avatar: getAvatar(req), connected: connected, notifNumber: req.session.notifNumber });
 				}
 			});
 		});

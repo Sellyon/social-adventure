@@ -55,6 +55,8 @@ export default class App extends React.Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.checkUser = this.checkUser.bind(this)
+    this.deleteComment = this.deleteComment.bind(this)
+    this.deleteNews = this.deleteNews.bind(this)
   }
 
   // Clicking button consequence
@@ -178,15 +180,56 @@ export default class App extends React.Component {
   }
 
   handleComment = (comment, news, callback) => {
-    console.log(comment, news, callback)
-    if (!this.state.loadRequest && news) {
+    if (comment.length > 0 && comment.length < 431) {
+      if (!this.state.loadRequest && news) {
+        this.setState({
+          loadRequest: true
+        }, async () => {
+          // Fetch data to update news with adding comment
+          try {
+            // Load async data.
+            let updatedNews = await API.post('/', {request:'addComment',news:news,comment:comment});
+            let newsList = JSON.parse(JSON.stringify(this.state.newsList));
+
+            for (var i = 0; i < newsList.length; i++) {
+              if (newsList[i]._id === updatedNews.data._id) {
+                newsList[i] = updatedNews.data
+              }
+            }
+
+            this.setState({
+              ...this.state, ...{
+                newsList
+              },
+              loadRequest: false
+            }, () => callback());
+          } catch (e) {
+            console.log(`😱 Axios request failed: ${e}`);
+            this.setState({
+              loadingErrorMessage: `😱 Axios request add comment failed: ${e} on news ${news}`,
+              loadRequest: false
+            }, () => callback());
+          }
+        });
+      }
+    } else {
+      this.setState({
+        snackbarOpen: true,
+        snackbarStatus: 'warning',
+        snackbarMessage: 'Votre message contient ' + comment.length + ' caractères, il doit contenir entre 1 et 430.',
+      });
+    }
+  }
+
+  deleteComment = (comment, news) => {
+    if (!this.state.loadRequest && news && comment) {
       this.setState({
         loadRequest: true
       }, async () => {
         // Fetch data to update news with adding comment
         try {
           // Load async data.
-          let updatedNews = await API.post('/', {request:'addComment',news:news,comment:comment});
+          let updatedNews = await API.post('/', {request:'deleteComment',news:news,comment:comment});
           let newsList = JSON.parse(JSON.stringify(this.state.newsList));
 
           for (var i = 0; i < newsList.length; i++) {
@@ -200,14 +243,113 @@ export default class App extends React.Component {
               newsList
             },
             loadRequest: false
-          }, () => callback());
+          }, () => {
+            this.setState({
+              snackbarOpen: true,
+              snackbarStatus: 'success',
+              snackbarMessage: 'Votre commentaire a été supprimé.',
+            });
+          });
         } catch (e) {
           console.log(`😱 Axios request failed: ${e}`);
           this.setState({
-            loadingErrorMessage: `😱 Axios request add comment failed: ${e} on news ${news}`,
+            loadingErrorMessage: `😱 Axios request delete comment failed: ${e} on news ${news}`,
             loadRequest: false
+          });
+        }
+      });
+    }
+  }
+
+  deleteNews = (news, callback) => {
+    if (!this.state.loadingNews && news) {
+      this.setState({
+        loadingNews: true
+      }, async () => {
+        // Fetch data to update news with adding comment
+        try {
+          // Load async data.
+          let response = await API.post('/', {request:'deleteNews',news:news});
+
+          let newsList = JSON.parse(JSON.stringify(this.state.newsList));
+
+          for (var i = 0; i < newsList.length; i++) {
+            if (newsList[i]._id === news._id) {
+              newsList.splice(i, 1)
+            }
+          }
+
+          this.setState({
+            ...this.state, ...{
+              newsList
+            },
+            loadingNews: false
+          }, () => {
+            this.setState({
+              snackbarOpen: true,
+              snackbarStatus: 'success',
+              snackbarMessage: 'Votre actu a été supprimée.',
+            });
+            callback()
+          });
+        } catch (e) {
+          console.log(`😱 Axios request failed: ${e}`);
+          this.setState({
+            loadingErrorMessage: `😱 Axios request delete news failed: ${e} on news ${news}`,
+            loadingNews: false
           }, () => callback());
         }
+      });
+    }
+  }
+
+  addNews = (news, callback) => {
+    if (news.title.length > 0 && news.title.length < 51 && news.content.length > 0 && news.content.length < 431) {
+      if (!this.state.loadingNews && news.title && news.content) {
+        this.setState({
+          loadingNews: true
+        }, async () => {
+          // Fetch data to update news with adding comment
+          try {
+            // Load async data.
+            let newNews = await API.post('/', {request:'addNews',news:news});
+            let newsList = JSON.parse(JSON.stringify(this.state.newsList));
+
+            newsList.push(newNews.data)
+
+            this.setState({
+              ...this.state, ...{
+                newsList
+              },
+              loadingNews: false
+            }, () => {
+              this.setState({
+                snackbarOpen: true,
+                snackbarStatus: 'success',
+                snackbarMessage: 'Votre actu a été publiée.',
+              });
+              callback()
+            });
+          } catch (e) {
+            console.log(`😱 Axios request failed: ${e}`);
+            this.setState({
+              loadingErrorMessage: `😱 Axios request add news failed: ${e} on news ${news}`,
+              loadingNews: false
+            }, () => callback());
+          }
+        });
+      }
+    } else if (news.title.length === 0 || news.title.length > 50) {
+      this.setState({
+        snackbarOpen: true,
+        snackbarStatus: 'warning',
+        snackbarMessage: 'Votre titre contient ' + news.title.length + ' caractères, il doit contenir entre 1 et 50.',
+      });
+    } else if (news.content.length === 0 || news.content.length > 430) {
+      this.setState({
+        snackbarOpen: true,
+        snackbarStatus: 'warning',
+        snackbarMessage: 'Votre message contient ' + news.content.length + ' caractères, il doit contenir entre 1 et 430.',
       });
     }
   }
@@ -314,6 +456,9 @@ export default class App extends React.Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <BlockSection
+                addNews={this.addNews}
+                deleteNews={this.deleteNews}
+                deleteComment={this.deleteComment}
                 handleLike={this.handleLike}
                 userDatas={this.state.userDatas}
                 checkUser={this.checkUser}
