@@ -34,6 +34,8 @@ const getAvatar = function (req) {
 	}
 }
 
+let connectedPlayerList = [];
+
 router.use(session({
 	secret: secret,
 	store: store,
@@ -46,16 +48,31 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-	// get news to populate "News" section, requested when componentDidMount
-	if (req.body.request && req.body.request === 'getNews') {
+
+	// get news and users to populate "News" and "Players" section
+	if (req.body.request && req.body.request === 'getNewsAndUsers') {
+		let data={};
 		client.connect(uri, function () {
 			myDB = client.get().db('twoPrisoners');
 			let collection = myDB.collection('articles');
-			collection.find().sort({date: 1}).toArray(function(err, data){
-				if (data) {
-					res.json(data);
+			collection.find().sort({date: 1}).toArray(function(err, dataNews){
+				if (err) throw err
+				if (dataNews) {
+					data.dataNews = dataNews;
 				}
-				client.close();
+				let collection = myDB.collection('users');
+				collection.find().sort({name: 1}).toArray(function(err, dataUsers){
+					if (err) throw err
+					if (dataUsers) {
+						for (var i = 0; i < dataUsers.length; i++) {
+							delete dataUsers[i].password;
+						}
+						data.dataUsers = dataUsers;
+						data.connectedPlayerList = connectedPlayerList;
+						res.json(data);
+					}
+					client.close();
+				});
 			});
 		});
 	}
@@ -65,9 +82,41 @@ router.post('/', function(req, res) {
 		let connected = false;
 		if (req.session && req.session.user) {
 			connected = true;
+
+			// Add this user to the connectedPlayerList
+			let alreadyListed = false;
+			for (var i = 0; i < connectedPlayerList.length; i++) {
+				if(connectedPlayerList[i].profil === req.session.user) {
+					alreadyListed = true;
+				}
+			}
+
+			if (!alreadyListed) {
+				connectedPlayerList.push({
+				profil: routMod.getUserName(req),
+					avatar: getAvatar(req),
+				})
+
+				console.log(req.body.user+' has join react page')
+				console.log('connected users : ',connectedPlayerList)
+			}	
 		}
-		data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected, notifNumber: req.session.notifNumber,  };
-		res.json(data)
+
+		let data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected, notifNumber: req.session.notifNumber };
+
+		res.json({ data:data, connectedPlayerList:connectedPlayerList })
+	}
+
+	if (req.body.request && req.body.request === 'disconnection') {
+		if (req.body.user) {
+			for (var i = 0; i < connectedPlayerList.length; i++) {
+				if (connectedPlayerList[i].profil === req.body.user) {
+					connectedPlayerList.splice(i,1)
+					console.log(req.body.user+' has left react page')
+					console.log('connected users : ',connectedPlayerList)
+				}
+			}
+		}
 	}
 
 	// Like a news
@@ -202,11 +251,25 @@ router.post('/', function(req, res) {
 
 	// Delete a news
 	if (req.body.request && req.body.request === 'deleteNews' && req.session && req.session.user) {
-		let comment = req.body.comment;
 		client.connect(uri, function () {
 			myDB = client.get().db('twoPrisoners');
 			let collection = myDB.collection('articles');
 		   	collection.remove( { "_id" : ObjectId(req.body.news._id) }, function(err, result) {
+	            if (err) {
+	                console.log(err);
+	            }
+				res.json('delete OK');
+				client.close();
+	        });
+		});
+	}
+
+	// Delete a user
+	if (req.body.request && req.body.request === 'deleteUser' && req.session && req.session.user) {
+		client.connect(uri, function () {
+			myDB = client.get().db('twoPrisoners');
+			let collection = myDB.collection('users');
+		   	collection.remove( { "name" : req.body.name }, function(err, result) {
 	            if (err) {
 	                console.log(err);
 	            }

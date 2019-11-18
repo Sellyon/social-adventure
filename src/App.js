@@ -6,8 +6,9 @@ import ImageButn from './components/imageButn';
 import BlockSection from './components/blockSection';
 import Snackbar from './components/snackbar';
 import Grid from '@material-ui/core/Grid';
-import InfoIcon from '@material-ui/icons/Info';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import GroupIcon from '@material-ui/icons/Group';
 import './App.css';
 
@@ -22,6 +23,7 @@ export default class App extends React.Component {
       generalCounter: 0,
       checked: true,
       isLoading: true,
+      loadingUserList:true,
       loadingErrorMessage: null,
       newsList: null,
       newsSelected: 0,
@@ -30,6 +32,8 @@ export default class App extends React.Component {
       snackbarMessage: '',
       snackbarStatus: 'info',
       loadRequest: false,
+      allPlayerList:[],
+      connectedPlayerList:[]
     };
 
     this.butnCoord = [
@@ -37,19 +41,25 @@ export default class App extends React.Component {
       {
         x : 385,
         y : 195,
-        icon : function(){ return <InfoIcon/>}
+        icon : function(){ return <AnnouncementIcon/>}
       },
     // "socialGame" button values
       {
-        x : 215,
-        y : 305,
-        icon : function(){ return <GroupIcon/>}
+        x : 385,
+        y : 325,
+        icon : function(){ return <AccountBalanceIcon/>}
       },
     // "game" button values
       {
         x : 560,
         y : 300,
         icon : function(){ return <SportsEsportsIcon/>}
+      },
+    // "userList" button values
+      {
+        x : 215,
+        y : 305,
+        icon : function(){ return <GroupIcon/>}
       },
     ]
 
@@ -61,7 +71,7 @@ export default class App extends React.Component {
 
   // Clicking button consequence
   async handleClick (newValue) {
-    if (this.state.selectedMenu !== newValue && (newValue === 0 || newValue === 1 || newValue === 2)) {
+    if (this.state.selectedMenu !== newValue && (newValue <= this.butnCoord.length)) {
       this.setState({
         checked: false,
       });
@@ -262,14 +272,14 @@ export default class App extends React.Component {
   }
 
   deleteNews = (news, callback) => {
-    if (!this.state.loadingNews && news) {
+    if (!this.state.loadRequest && news) {
       this.setState({
-        loadingNews: true
+        loadRequest: true
       }, async () => {
         // Fetch data to update news with adding comment
         try {
           // Load async data.
-          let response = await API.post('/', {request:'deleteNews',news:news});
+          await API.post('/', {request:'deleteNews',news:news});
 
           let newsList = JSON.parse(JSON.stringify(this.state.newsList));
 
@@ -283,7 +293,7 @@ export default class App extends React.Component {
             ...this.state, ...{
               newsList
             },
-            loadingNews: false
+            loadRequest: false
           }, () => {
             this.setState({
               snackbarOpen: true,
@@ -296,7 +306,49 @@ export default class App extends React.Component {
           console.log(`😱 Axios request failed: ${e}`);
           this.setState({
             loadingErrorMessage: `😱 Axios request delete news failed: ${e} on news ${news}`,
-            loadingNews: false
+            loadRequest: false
+          }, () => callback());
+        }
+      });
+    }
+  }
+
+  deleteUser = (name, callback) => {
+    if (!this.state.loadRequest && name) {
+      this.setState({
+        loadRequest: true
+      }, async () => {
+        // Fetch data to update news with adding comment
+        try {
+          // Load async data.
+          await API.post('/', {request:'deleteUser',name:name});
+
+          let allPlayerList = JSON.parse(JSON.stringify(this.state.allPlayerList));
+
+          for (var i = 0; i < allPlayerList.length; i++) {
+            if (allPlayerList[i].name === name) {
+              allPlayerList.splice(i, 1)
+            }
+          }
+
+          this.setState({
+            ...this.state, ...{
+              allPlayerList
+            },
+            loadRequest: false
+          }, () => {
+            this.setState({
+              snackbarOpen: true,
+              snackbarStatus: 'success',
+              snackbarMessage: 'Le compte de '+name+' a été supprimé.',
+            });
+            callback()
+          });
+        } catch (e) {
+          console.log(`😱 Axios request failed: ${e}`);
+          this.setState({
+            loadingErrorMessage: `😱 Axios request delete user failed: ${e} on user ${name}`,
+            loadRequest: false
           }, () => callback());
         }
       });
@@ -305,9 +357,9 @@ export default class App extends React.Component {
 
   addNews = (news, callback) => {
     if (news.title.length > 0 && news.title.length < 51 && news.content.length > 0 && news.content.length < 431) {
-      if (!this.state.loadingNews && news.title && news.content) {
+      if (!this.state.loadRequest && news.title && news.content) {
         this.setState({
-          loadingNews: true
+          loadRequest: true
         }, async () => {
           // Fetch data to update news with adding comment
           try {
@@ -321,7 +373,7 @@ export default class App extends React.Component {
               ...this.state, ...{
                 newsList
               },
-              loadingNews: false
+              loadRequest: false
             }, () => {
               this.setState({
                 snackbarOpen: true,
@@ -334,7 +386,7 @@ export default class App extends React.Component {
             console.log(`😱 Axios request failed: ${e}`);
             this.setState({
               loadingErrorMessage: `😱 Axios request add news failed: ${e} on news ${news}`,
-              loadingNews: false
+              loadRequest: false
             }, () => callback());
           }
         });
@@ -397,25 +449,32 @@ export default class App extends React.Component {
     window.addEventListener('resize', this.updateDimensions);
 
     // Fetch data to populate news
-    try {
-      // Load async data.
-      let newsList = await API.post('/', {request:'getNews'});
+    let that=this;
+    setInterval(async function(){
+      try {
+        // Load async data.
+        let data = await API.post('/', {request:'getNewsAndUsers'});
 
-      // Update state with new data and re-render our component.
-      newsList = newsList.data;
+        // Update state with new data and re-render our component.
+        let newsList = data.data.dataNews;
+        let allPlayerList = data.data.dataUsers;
+        let connectedPlayerList = data.data.connectedPlayerList;
 
-      this.setState({
-        ...this.state, ...{
-          isLoading: false,
-          newsList
-        }
-      });
-    } catch (e) {
-      console.log(`😱 Axios request failed: ${e}`);
-      this.setState({
-        loadingErrorMessage: `😱 Axios request getNews failed: ${e}`,
-      });
-    }
+        that.setState({
+          ...that.state, ...{
+            isLoading: false,
+            newsList,
+            allPlayerList,
+            connectedPlayerList
+          }
+        });
+      } catch (e) {
+        console.log(`😱 Axios request failed: ${e}`);
+        that.setState({
+          loadingErrorMessage: `😱 Axios request getNewsAndUsers failed: ${e}`,
+        });
+      }
+    }, 2000);
 
     // Fetch data to populate user's values
     try {
@@ -423,13 +482,22 @@ export default class App extends React.Component {
       let userDatas = await API.post('/', {request:'getUser'});
 
       // Update state with new data and re-render our component.
-      userDatas = userDatas.data;
+      let connectedPlayerList = userDatas.data.connectedPlayerList;
+      userDatas = userDatas.data.data;
 
       this.setState({
         ...this.state, ...{
-          userDatas
+          loadingUserList: false,
+          userDatas,
+          connectedPlayerList
         }
       });
+
+      // Update connectedPlayerList when leave page
+      let that = this;
+      window.onbeforeunload = function (e) {
+        API.post('/', {request:'disconnection',user:that.state.userDatas.profil});
+      };
     } catch (e) {
       console.log(`😱 Axios request getUser failed: ${e}`);
     }
@@ -439,7 +507,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    
     return (
       <React.Fragment>
         <div className="App">
@@ -456,6 +523,10 @@ export default class App extends React.Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <BlockSection
+                deleteUser={this.deleteUser}
+                loadingUserList={this.state.loadingUserList}
+                allPlayerList={this.state.allPlayerList}
+                connectedPlayerList={this.state.connectedPlayerList}
                 addNews={this.addNews}
                 deleteNews={this.deleteNews}
                 deleteComment={this.deleteComment}

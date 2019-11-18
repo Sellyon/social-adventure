@@ -1,6 +1,7 @@
 import React from 'react';
 import News from './news';
-import { Paper, Typography, Grow, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Card, CardContent, TextField } from '@material-ui/core/';
+import UsersSection from './usersSection';
+import { Paper, Typography, Grow, Grid, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core/';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import clsx from 'clsx';
 
@@ -21,6 +22,10 @@ export default function PaperSheet(props) {
       mainTitle: 'Les jeux',
       mainTexte: 'Le catalogue de jeux',
     },
+    {
+      mainTitle: 'Les joueurs',
+      mainTexte: 'Faites ici des rencontres avec les joueurs connectés !',
+    },
   ];
 
   const getContent = () => {
@@ -28,7 +33,7 @@ export default function PaperSheet(props) {
 
     // Les news
     if (props.selectedMenu === 0) {
-      return <div>
+      return <>
         <News
           deleteNews={props.deleteNews}
           deleteComment={props.deleteComment}
@@ -44,7 +49,7 @@ export default function PaperSheet(props) {
           imageHeight={props.imageHeight}
           handleLikeComment={props.handleLikeComment}
         />
-      </div>
+      </>
     }
 
     // Social RPG
@@ -58,6 +63,22 @@ export default function PaperSheet(props) {
     if (props.selectedMenu === 2) {
       return <div>
         <a href="/lobby">Cubekatraz</a> 
+      </div>
+    }
+
+    // Le catalogue de jeux
+    if (props.selectedMenu === 3) {
+      return <div>
+        <UsersSection
+          loadRequest={props.loadRequest}
+          deleteUser={props.deleteUser}
+          loadingErrorMessage={props.loadingErrorMessage}
+          loadingUserList={props.loadingUserList}
+          allPlayerList={props.allPlayerList}
+          connectedPlayerList={props.connectedPlayerList}
+          checkUser={props.checkUser}
+          userDatas={props.userDatas}
+        />
       </div>
     }
   }

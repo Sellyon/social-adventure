@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useSwipeable, Swipeable } from 'react-swipeable'
+import { Swipeable } from 'react-swipeable'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

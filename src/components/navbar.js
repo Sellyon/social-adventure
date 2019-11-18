@@ -1,7 +1,6 @@
 import React from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Badge, AppBar, Toolbar, IconButton, Typography, MenuItem, Menu, Avatar } from '@material-ui/core/';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -17,12 +16,6 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  /*title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },*/
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
