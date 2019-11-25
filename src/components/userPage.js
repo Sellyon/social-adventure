@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography, Card, CardContent, CardActions, Avatar } from '@material-ui/core/';
+import { Button, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography, Avatar } from '@material-ui/core/';
 import DeleteIcon from '@material-ui/icons/Delete';
-import CommentIcon from '@material-ui/icons/Comment';
+/*import CommentIcon from '@material-ui/icons/Comment';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import GroupIcon from '@material-ui/icons/Group';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
+import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';*/
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -17,10 +17,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AlertDialogSlide(props) {
   const [openDelete, setOpenDelete] = React.useState(false);
-
-  const handleOpenDelete = () => {
-    setOpenDelete(true);
-  };
 
   const handleCloseDelete = () => {
     setOpenDelete(false);
@@ -32,7 +28,6 @@ export default function AlertDialogSlide(props) {
   };
 
   const checkIsConnected = () => {
-    console.log(props.connectedPlayerList)
     for (var i = 0; i < props.connectedPlayerList.length; i++) {
       if (props.connectedPlayerList[i].profil === props.player.name) {
         return true

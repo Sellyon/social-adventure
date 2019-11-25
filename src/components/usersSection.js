@@ -1,8 +1,7 @@
 import React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import UserList from './userList';
-import { Icon, Grid, Button, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography, Card, CardContent, TextField,CardActions, Avatar } from '@material-ui/core/';
-import NewsContent from './newsContent';
+import { Grid } from '@material-ui/core/';
 
 class UsersSection extends React.Component {
 
@@ -32,11 +31,13 @@ class UsersSection extends React.Component {
     // If user is not admpin, only show connected users
       let listForBasicUsers = [];
       list.map(function(user, i){
-        for (var i = 0; i < that.props.connectedPlayerList.length; i++) {
-          if (that.props.connectedPlayerList[i].profil === user.name) {
+        for (var j = 0; j < that.props.connectedPlayerList.length; j++) {
+          if (that.props.connectedPlayerList[j].profil === user.name) {
             listForBasicUsers.push(user)
+            return user
           }
-        } 
+        }
+        return false
       })
       return listForBasicUsers
     }

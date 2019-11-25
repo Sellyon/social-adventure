@@ -85,8 +85,25 @@ export default function PrimarySearchAppBar(props) {
     window.location.href = "/profil"
   }
 
-  const handleClickConnect = () => {
+  const handleClickRegister = () => {
+    window.location.href = "/register"
+  }
+
+  const handleClickLogin = () => {
     window.location.href = "/login"
+  }
+
+  const handleClickMyAccount = () => {
+    /*if (props.allPlayerList && props.userDatas && props.userDatas.profil) {
+      for (var i = 0; i < props.allPlayerList.length; i++) {
+        if ( props.allPlayerList[i].name === props.userDatas.profil) {
+          window.location.href = "/register?playerDatas="+JSON.stringify(props.allPlayerList[i])
+        }
+      }
+    } else {
+      console.log('Erreur : tentative interdite d\'accéder à myAccount !')
+    }*/
+    window.location.href = "/register?getDatas="+props.userDatas.profil
   }
 
   const openMails = () => {
@@ -115,7 +132,7 @@ export default function PrimarySearchAppBar(props) {
   }
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
+  const renderMenuConnected = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -125,15 +142,23 @@ export default function PrimarySearchAppBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {props.userDatas && props.userDatas.connected ? (
-        <>
-          <MenuItem onClick={handleClickProfile}>Mon profil</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Mon compte</MenuItem>
-        </>
-        ) : (
-          <MenuItem onClick={handleClickConnect}>Se connecter</MenuItem>
-        )
-      }
+      <MenuItem onClick={handleClickProfile}>Mon profil</MenuItem>
+      <MenuItem onClick={handleClickMyAccount}>Mon compte</MenuItem>
+      <MenuItem onClick={props.disconnect}>Se déconnecter</MenuItem>
+    </Menu>
+  );
+  const renderMenuDisconnected = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleClickRegister}>S'inscrire</MenuItem>
+      <MenuItem onClick={handleClickLogin}>Se connecter</MenuItem>
     </Menu>
   );
 
@@ -185,62 +210,73 @@ export default function PrimarySearchAppBar(props) {
   }
 
   return (
-    <div className={classes.grow}>
-      <AppBar position="static" className={classes.AppBar}>
-        <Toolbar>
-          <div className={classes.grow} />
-          <Typography className={classes.title} variant="h6" noWrap>
-            {props.userDatas && props.userDatas.profil}
-          </Typography>
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label="show new mails"
-              color={colorIcon}
-              onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos mails.', openMails)}
-            >
-                <Badge badgeContent={getMailNumber()} color="secondary" invisible={isBadgeInvisible('mailNumber')}>
-                  <MailIcon />
+    <>
+      <div className={classes.grow}>
+        <AppBar position="static" className={classes.AppBar}>
+          <Toolbar>
+            {props.userDatas && props.userDatas.profil === 'Sellyon' ? (
+              <Typography className={classes.title} variant="h6" noWrap>
+                Mode super admin <span role="img" aria-label="emoteCat">😺</span>
+              </Typography>
+              ) : (
+              <Typography className={classes.title} variant="h6" noWrap>
+                Social-Adventure
+              </Typography>
+              )}
+            <div className={classes.grow} />
+            <Typography className={classes.title} variant="h6" noWrap>
+              {props.userDatas && props.userDatas.profil}
+            </Typography>
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                aria-label="show new mails"
+                color={colorIcon}
+                onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos mails.', openMails)}
+              >
+                  <Badge badgeContent={getMailNumber()} color="secondary" invisible={isBadgeInvisible('mailNumber')}>
+                    <MailIcon />
+                  </Badge>
+              </IconButton>
+              <IconButton
+                aria-label="show new notifications"
+                color={colorIcon}
+                onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos notifications.', openNotifications)}
+              >
+                <Badge badgeContent={getNotifNumber()} color="secondary" invisible={isBadgeInvisible('notifNumber')}>
+                  <NotificationsIcon />
                 </Badge>
-            </IconButton>
-            <IconButton
-              aria-label="show new notifications"
-              color={colorIcon}
-              onClick={() => props.checkUser('warning', 'Vous devez être connecté pour consulter vos notifications.', openNotifications)}
-            >
-              <Badge badgeContent={getNotifNumber()} color="secondary" invisible={isBadgeInvisible('notifNumber')}>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              {(!props.userDatas || !props.userDatas.connected) ? <AccountCircle /> : (<Avatar
-                  alt={"Avatar de " + props.userDatas.name}
-                  src={props.userDatas.avatar}
-                />)
-              }
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </div>
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                {(!props.userDatas || !props.userDatas.connected) ? <AccountCircle /> : (<Avatar
+                    alt={"Avatar de " + props.userDatas.name}
+                    src={props.userDatas.avatar}
+                  />)
+                }
+              </IconButton>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMobileMenu}
+        {props.userDatas && props.userDatas.connected ? renderMenuConnected : renderMenuDisconnected}
+      </div>
+    </>
   );
 }

@@ -1,18 +1,18 @@
 import React from 'react';
-import { Button, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography, Card, CardContent, TextField,CardActions, Avatar } from '@material-ui/core/';
+import { Button, Grid, Dialog, Slide, Typography, Card, CardContent, CardActions, Avatar } from '@material-ui/core/';
 import UserPage from './userPage';
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+/*import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
-import ScheduleIcon from '@material-ui/icons/Schedule';
+import ScheduleIcon from '@material-ui/icons/Schedule';*/
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+/*import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import GroupIcon from '@material-ui/icons/Group';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';*/
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Transition = React.forwardRef(function Transition(props, ref) {

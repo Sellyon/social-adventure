@@ -2,6 +2,7 @@ var MongoClient = require('mongodb').MongoClient
 
 var state = {
   db: null,
+  connections:0
 };
 
 exports.connect = function(url, done) {
@@ -24,12 +25,13 @@ exports.get = function() {
 
 exports.close = function(done) {
   if (state.db) {
-    state.db.close(function(err, result) {
+    state.connections = 0;
+    /*state.db.close(function(err, result) {
       state.db = null;
       state.mode = null;
       if (err) {
         done(err);
       }
-    });
+    });*/
   };
 };

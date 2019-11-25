@@ -132,8 +132,6 @@ export default function PaperSheet(props) {
             error={formTitleValue.length > 50}
             helperText="minimun 1 caractère, au maximum 50."
           />
-        </DialogContent>
-        <DialogContent>
           <TextField
             margin="dense"
             id="newsValue"

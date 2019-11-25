@@ -1,4 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
+//const nodemailer = require('../node_modules/nodemailer');
+const nodemailer = require("nodemailer");
 
 export function getImageSize() {
   let size = 0;
