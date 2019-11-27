@@ -68,7 +68,11 @@ router.post('/', function(req, res) {
 						req.session.user = data[0].name;
 						req.session.avatar = data[0].avatar;
 						connected = true;
-						req.session.notifNumber = data[0].RequestYouForFriend.length;
+						req.session.requestYouForFriend = data[0].requestYouForFriend;
+						req.session.recommendedFriends = data[0].recommendedFriends;
+						req.session.notifNumber = data[0].requestYouForFriend.length + data[0].recommendedFriends.length;
+						req.session.gold = data[0].gold;
+						req.session.level = data[0].level;
 						res.json('OK')
 			  		} else {
 			  			res.json('Le compte n\'est pas activé.');

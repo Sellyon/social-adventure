@@ -174,7 +174,6 @@ export default function Registration(props) {
     const lastName = document.getElementById('lastName').value;
     const pseudo = document.getElementById('pseudo').value;
     const date = document.getElementById('date').value;
-    const description = document.getElementById('description').value;
     const pref_aventure = document.getElementById('pref_aventure').value;
     const pref_puzzle = document.getElementById('pref_puzzle').value;
     const pref_shooter = document.getElementById('pref_shooter').value;

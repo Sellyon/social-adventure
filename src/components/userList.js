@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button, Grid, Dialog, Slide, Typography, Card, CardContent, CardActions, Avatar } from '@material-ui/core/';
+import { Button, Grid, Dialog, Slide, Typography, Card, CardContent, CardActions, Avatar, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@material-ui/core/';
 import UserPage from './userPage';
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
 /*import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
 import ScheduleIcon from '@material-ui/icons/Schedule';*/
+import DeleteIcon from '@material-ui/icons/Delete';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 /*import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
@@ -22,6 +22,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AlertDialogSlide(props) {
   const [open, setOpen] = React.useState(false);
   const [openPlayer, setOpenPlayer] = React.useState(null);
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [playerToDelete, setPlayerToDelete] = React.useState(null);
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setPlayerToDelete(null)
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -33,6 +40,15 @@ export default function AlertDialogSlide(props) {
 
   const handleClosePlayer = () => {
     setOpenPlayer(null);
+  };
+
+  const handleOpenProfile = (player) => {
+    window.location.href="/profil/"+player
+  }
+
+  const deleteValidation = (player) => {
+    handleCloseDelete();
+    props.deleteUser(player, handleClosePlayer)
   };
 
   return (
@@ -73,31 +89,52 @@ export default function AlertDialogSlide(props) {
                         </Grid>
                       </CardContent>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <CardActions>
+                      {props.userDatas && props.userDatas.connected && (props.userDatas.profil === 'Sellyon' || props.userDatas.profil === props.player.name) &&
+                        <Button title="Supprimer ce compte" onClick={() => {
+                          setOpenDelete(true)
+                          setPlayerToDelete(player.name)
+                        }} color="primary">
+                          <DeleteIcon/>
+                        </Button>
+                      }
                       {props.userDatas && props.userDatas.profil !== player.name &&
-                        <Button title="Voir profil" onClick={ () => props.checkUser('warning','Vous devez être connecté pour consulter un profil.', setOpenPlayer, i) }>
-                          <VisibilityIcon style={{height:'48px', width:'48px', color:'#9B49FF'}}/>
+                        <Button title="Voir profil" onClick={ () => props.checkUser('warning','Vous devez être connecté pour consulter un profil.', handleOpenProfile, player.name) }>
+                          <VisibilityIcon style={{height:'24px', width:'24px', color:'#9B49FF'}}/>
                         </Button>
                       }
                       </CardActions>
                     </Grid>
                   </Grid>
                 </Card>
-                <UserPage
-                  connectedPlayerList={props.connectedPlayerList}
-                  allPlayerList={props.allPlayerList}
-                  loadRequest={props.loadRequest}
-                  open={openPlayer === i}
-                  player={player}
-                  userDatas={props.userDatas}
-                  handleClose={handleClosePlayer}
-                  deleteUser={props.deleteUser}
-                />
               </>
             )
           })
         }
+      </Dialog>
+      <Dialog
+        open={openDelete}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDelete}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id={"delete-title-"+playerToDelete}>Suppression du compte "{playerToDelete}"</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Voulez-vous vraiment supprimer ce compte ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={ () => deleteValidation(playerToDelete) } color="primary">
+            Valider
+          </Button>
+          <Button onClick={handleCloseDelete} color="primary">
+            Annuler
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

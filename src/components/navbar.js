@@ -1,6 +1,6 @@
 import React from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { Badge, AppBar, Toolbar, IconButton, Typography, MenuItem, Menu, Avatar } from '@material-ui/core/';
+import { Badge, AppBar, Toolbar, IconButton, Typography, MenuItem, Menu, Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Button } from '@material-ui/core/';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -56,10 +56,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
+
 export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [openNotifs, setOpenNotifs] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -75,6 +80,10 @@ export default function PrimarySearchAppBar(props) {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleCloseNotifs = () => {
+    setOpenNotifs(false);
   };
 
   const handleMobileMenuOpen = event => {
@@ -111,7 +120,7 @@ export default function PrimarySearchAppBar(props) {
   }
 
   const openNotifications = () => {
-    console.log(props.userDatas.profil+' veut consulter ses notifications')
+    setOpenNotifs(true)
   }
 
   const getMailNumber = () => {
@@ -121,6 +130,14 @@ export default function PrimarySearchAppBar(props) {
   const getNotifNumber = () => {
     if (props.userDatas && props.userDatas.notifNumber) {
       return props.userDatas.notifNumber
+    } else {
+      return 0
+    }
+  }
+
+  const getNotifContent = () => {
+    if (props.userDatas && props.userDatas.requestYouForFriend && props.userDatas.recommendedFriends) {
+      return {requestYouForFriend:props.userDatas.requestYouForFriend, recommendedFriends:props.userDatas.recommendedFriends}
     }
   }
 
@@ -276,6 +293,58 @@ export default function PrimarySearchAppBar(props) {
         </AppBar>
         {renderMobileMenu}
         {props.userDatas && props.userDatas.connected ? renderMenuConnected : renderMenuDisconnected}
+      </div>
+      <div>
+        <Dialog
+          open={openNotifs}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleCloseNotifs}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">Vous avez {getNotifNumber()} notifs</DialogTitle>
+          <DialogContent>
+          {getNotifContent() && getNotifContent().requestYouForFriend && getNotifContent().requestYouForFriend.length > 0 &&
+            <Typography className={classes.title} variant="h6" noWrap>
+              {getNotifContent().requestYouForFriend.Length} demandes d'amis
+            </Typography>}
+          {getNotifContent() && getNotifContent().requestYouForFriend && getNotifContent().requestYouForFriend.length > 0 &&
+            getNotifContent().requestYouForFriend.map(
+              function(request, index) {
+                return (
+                  <DialogContentText id="alert-dialog-slide-description" key={index}>
+                    {request} souhaite vous ajouter en ami.
+                  </DialogContentText>
+                )
+              }
+            )
+          }
+          {getNotifContent() && getNotifContent().recommendedFriends && getNotifContent().recommendedFriends.length > 0 &&
+            <Typography className={classes.title} variant="h6" noWrap>
+              {getNotifContent().recommendedFriends.Length} recommandations d'amis
+            </Typography>}
+          {getNotifContent() && getNotifContent().recommendedFriends && getNotifContent().recommendedFriends.length > 0 &&
+            getNotifContent().recommendedFriends.map(
+              function(recommendation, index) {
+                return (
+                  <DialogContentText id="alert-dialog-slide-description" key={index}>
+                    {recommendation.recommender} vous recommande {recommendation.recommended} en ami
+                  </DialogContentText>
+                )
+              }
+            )
+          }
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClickProfile} color="primary">
+              Voir mon compte
+            </Button>
+            <Button onClick={handleCloseNotifs} color="primary">
+              Fermer
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </>
   );

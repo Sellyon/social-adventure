@@ -4,14 +4,24 @@ html
     script.
       var profil = '!{profil}';
       var consultedProfile = '!{consultedProfile}';
-      var hideIcon = '!{hideIcon}';
-      var avatarProfil = '!{avatarProfil}'
+      var isUserFriend = '!{isUserFriend}';
+      var avatarProfil = '!{avatarProfil}';
+      var gender = '!{gender}';
+      var level = '!{level}';
+      var birthday = '!{birthday}';
+      var firstName = '!{firstName}';
+      var lastName = '!{lastName}';
+      var playStyle = '!{playStyle}';
+      var preferencesList = '!{preferencesList}';
+      var userFriendList = '!{userFriendList}';
+      var RecommendedFriends = '!{RecommendedFriends}';
+      var isAlreadyRecommended = !{isAlreadyRecommended};
     script(type='text/javascript', src='/js/profil.js')
-    include includes/navigation.pug
+    include includes/navigationProfile.pug
     div#profilBackGround
       div#profilWrapper
         div#profilAvatar
-          h1= titleprofil
+          h1= titleprofil + ' niveau ' + level
           img(src=avatarProfil)
           input#iconEditAvatar(type='image', src='/images/icons/edit.svg', class='edit', title='modifier votre avatar')
           div#changeAvatar
@@ -27,7 +37,7 @@ html
         div#profilDetails
           div#profilPresentation
             img#iconTrombone(src='/images/icons/trombone.png')
-            h2 Dossier pénitentiaire
+            h2 Description
             p#description= description
             form#descriptionForm(action='/profil/' + profil, method='post')
               div
@@ -36,55 +46,105 @@ html
                 button#cancelEditDescription(name='button') annuler
             input#iconEditDescription(type='image', src='/images/icons/edit.svg', class='edit', title='éditer votre description')
 
+          div#profilPersonality
+            h2 Personnalité
+            div#personalityDetails
+                  div
+                    h3 Prénom
+                    p= firstName
+                  div
+                    h3 Nom
+                    p= lastName
+                  div
+                    h3 Genre
+                    p= gender
+                  div
+                    h3 Style de jeu
+                    p= playStyle
+                  div#profilBirthday
+                    h3 Date de naissance
+                    p= birthday
+                  div#profilPreferences
+                    h3 Préférences
+                    ul
+                      each preference , index in preferencesList
+                        li= preference
           div#statsAndFriends
             div#profilStats
               div 
-                h2 Observations
+                h2 Statistiques
                 div#statsIcons
                   div
                     img(src='/images/icons/score.png', title='meilleur score')
+                    p= bestScore
                   div
                     img(src='/images/icons/coop.png', title='parties effectuées')
+                    p= matchPlayed
                   div
                     img(src='/images/icons/victories.png', title='parties victorieuses')
+                    p= gameFinished
                   div
                     img(src='/images/icons/chrono.png', title='meilleur chrono')
-                div#statsValues
-                  p= bestScore
-                  p= matchPlayed
-                  p= gameFinished
-                  p= bestTime
+                    p= bestTime
               div
                 h2 Trophées
                 p (en cours de développement)
             div#ProfilFriends
               div
                 h2 Amis (!{friends.length})
-                form(action='/profil/' + consultedProfile, method='post')
-                  input#hiddenField(type='text',name='addFriend', value=consultedProfile) 
-                  input#iconAddFriend(type='image', alt="Submit", src='/images/icons/addFriend.png', class='edit', title='ajouter ' + consultedProfile + ' en ami')
+                h3 Les amis de !{consultedProfile}
                 ul
                   each friend , index in friends
                     li
                       a(href='/profil/' + friend)= friend
+                if profil !== consultedProfile
+                  form(action='/profil/' + consultedProfile, method='post')
+                    input#hiddenField(type='text',name='addFriend', value=consultedProfile) 
+                    input#iconAddFriend(type='image', alt="Submit", src='/images/icons/addFriend.png', class='edit', title='ajouter ' + consultedProfile + ' en ami')
+                if profil !== consultedProfile && isUserFriend === true
+                  form(action='/profil/' + consultedProfile, method='post')
+                    h3 recommander cet ami
+                    select#profilRecommendationSelect(name='recommendation')
+                      each friend , index in userFriendList
+                        if friend !== consultedProfile && isAlreadyRecommended(recommendedFriends, friend) === false
+                          option(value={friend, profil, consultedProfile})=friend
+                    input#iconRecommendation(type='image', alt="Submit", src='/images/icons/recommendation.png', class='edit', title='recommander cet ami à ' + consultedProfile)
+                    if recommendedFriends.length > 0
+                      ul
+                        each recommendation , index in recommendedFriends
+                          li !{recommendation.recommender} a recommandé !{recommendation.recommended} à !{consultedProfile}
+                if profil === consultedProfile
               if profil === consultedProfile
+                if recommendedFriends.length > 0
                 div
-                  h2 Envoyées (!{friendsYouRequest.length})
+                  h3 Vos recommandations
+                  ul
+                    each recommendation , index in recommendedFriends
+                      li 
+                        form(action='/profil/' + consultedProfile, method='post')
+                          a(href='/profil/' + recommendation.recommender)=recommendation.recommender + ' '
+                          span vous recommande 
+                          a(href='/profil/' + recommendation.recommended)=recommendation.recommended + ' '
+                          span  !
+                          button.profilFormButton(name='cancelRecommendation', value={recommended:recommendation.recommended, consultedProfile:consultedProfile}) annuler
+                          button.profilFormButton(name='acceptRecommendation', value={recommended:recommendation.recommended, consultedProfile:consultedProfile}) accepter
+                div
+                  h3 Envoyées (!{friendsYouRequest.length})
                   p Vos demandes envoyées en attente de réponse
                   ul
                     each friendYouRequest , index in friendsYouRequest
                       li
                         form(action='/profil/' + consultedProfile, method='post')
                           a(href='/profil/' + friendYouRequest)= friendYouRequest
-                          button#cancelAddFriend(name='cancelRequestSent', value=friendYouRequest) annuler
+                          button.profilFormButton(name='cancelRequestSent', value=friendYouRequest) annuler
                 div
-                  h2 Reçues (!{requestYouForFriend.length})
+                  h3 Reçues (!{requestYouForFriend.length})
                   p Les demandes reçues en attente de votre réponse
                   ul
                     each requestForYou , index in requestYouForFriend
                       li
                         form(action='/profil/' + consultedProfile, method='post')
                           a(href='/profil/' + requestForYou)= requestForYou
-                          button#refuseRequestFriend(name='refuseRecievedRequest', type='submit', value=requestForYou) annuler
-                          button#acceptRequestFriend(name='acceptRecievedRequest', type='submit', value=requestForYou) accepter
-  include includes/footer.pug
+                          button.profilFormButton(name='refuseRecievedRequest', type='submit', value=requestForYou) annuler
+                          button.profilFormButton(name='acceptRecievedRequest', type='submit', value=requestForYou) accepter
+  //include includes/footer.pug

@@ -49,6 +49,24 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
 
+	// Buy level up potion
+	if (req.session && req.session.user && req.body.request && req.body.request === 'buyLevelUpPotion') {
+		client.connect(uri, function () {
+			myDB = client.get().db('twoPrisoners');
+			let collection = myDB.collection('users');
+
+			collection.update(
+			   { 'name': req.session.user },
+			   { $inc: { gold: -500, level: 1 } }
+			, function(err,records){
+			  		if (err) throw err;
+			  		res.json('OK');
+		    		client.close();
+			    }
+			);
+		});
+	}
+
 	// Activate account
 	if (req.body.request && req.body.request === 'accountActivation' && req.body.code) {
 		let code = req.body.code;
@@ -68,7 +86,9 @@ router.post('/', function(req, res) {
 						  		res.json('account_activated');
 						  		req.session.user = data[0].name;
 								req.session.avatar = data[0].avatar;
-								req.session.notifNumber = data[0].RequestYouForFriend.length;
+								req.session.requestYouForFriend = data[0].requestYouForFriend;
+								req.session.recommendedFriends = data[0].recommendedFriends;
+								req.session.notifNumber = data[0].requestYouForFriend.length + data[0].recommendedFriends.length;
 					    		client.close();
 						    }
 						);
@@ -115,6 +135,14 @@ router.post('/', function(req, res) {
 	// get user's data
 	if (req.body.request && req.body.request === 'getUser') {
 		let connected = false;
+
+		if (req.body.userDatas && req.body.userDatas.gold) {
+			req.sessions.gold = req.body.userDatas.gold
+		}
+		if (req.body.userDatas && req.body.userDatas.level)	{
+			req.sessions.level = req.body.userDatas.level
+		}
+
 		if (req.session && req.session.user) {
 			connected = true;
 
@@ -137,7 +165,19 @@ router.post('/', function(req, res) {
 			}	
 		}
 
-		let data = { profil: routMod.getUserName(req), title: 'index', message: routMod.getUserName(req), avatar: getAvatar(req), connected: connected, notifNumber: req.session.notifNumber };
+		let data = { 
+			profil: routMod.getUserName(req),
+			title: 'index', 
+			message: routMod.getUserName(req), 
+			avatar: getAvatar(req), 
+			connected: connected, 
+			notifNumber: req.session.notifNumber, 
+			requestYouForFriend: 
+			req.session.requestYouForFriend, 
+			recommendedFriends: req.session.recommendedFriends,
+			gold: req.session.gold,
+			level: req.session.level,
+			};
 
 		res.json({ data:data, connectedPlayerList:connectedPlayerList })
 	}

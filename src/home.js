@@ -67,6 +67,7 @@ export default class Home extends React.Component {
     this.checkUser = this.checkUser.bind(this)
     this.deleteComment = this.deleteComment.bind(this)
     this.deleteNews = this.deleteNews.bind(this)
+    this.setOpenSnack = this.setOpenSnack.bind(this)
   }
 
   // Clicking button consequence
@@ -91,6 +92,14 @@ export default class Home extends React.Component {
     }
     this.setState({
       snackbarOpen: false,
+    });
+  }
+
+  setOpenSnack = (status, message) => {
+    this.setState({
+      snackbarOpen: true,
+      snackbarStatus: status,
+      snackbarMessage: message,
     });
   }
 
@@ -543,7 +552,7 @@ export default class Home extends React.Component {
     // Fetch data to populate user's values
     try {
       // Load async data.
-      let userDatas = await API.post('/', {request:'getUser'});
+      let userDatas = await API.post('/', {request:'getUser', userDatas:this.state.userDatas});
 
       // Update state with new data and re-render our component.
       let connectedPlayerList = userDatas.data.connectedPlayerList;
@@ -603,6 +612,7 @@ export default class Home extends React.Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <BlockSection
+                setOpenSnack={this.setOpenSnack}
                 deleteUser={this.deleteUser}
                 loadingUserList={this.state.loadingUserList}
                 allPlayerList={this.state.allPlayerList}

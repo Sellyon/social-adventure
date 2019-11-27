@@ -75,10 +75,11 @@ router.post('/', function(req, res) {
 				preferencesList: preferencesList,
 				achievements:[],
 				friendsYouRequest:[],
-				RequestYouForFriend:[],
+				requestYouForFriend:[],
+				recommendedFriends:[],
 				accountActivated: false,
 				accountCodeActivation: code,
-				gold:0,
+				gold:500,
 				level:1
 			}
 
@@ -97,14 +98,12 @@ router.post('/', function(req, res) {
 								client.close();
 							} else {
 								message = 'Cet email est déjà utilisé, choisis-en un autre.';
-								console.log(message)
 								res.json(message);
 								client.close();
 							}
 						});
 					} else {
 					  	message = 'Ce pseudo est déjà utilisé, choisis-en un autre.';
-					  	console.log(message)
 					  	res.json(message);
 					  	client.close();
 					}
@@ -118,13 +117,11 @@ router.post('/', function(req, res) {
 			if (!registerPack.lastName) {message+=' Nom manquant.'};
 			if (!registerPack.birthday) {message+=' Date d\'anniversaire manquant.'};
 			if (!registerPack.password) {message+=' Mot de passe manquant.'};
-			console.log(message)
 			res.json(message);
 			client.close();
 		}
 	} else if(req.body.request === 'subscribe') {
 		message = 'Les données d\'inscriptions sont incorrects, l\'inscription est annulée.';
-		console.log(message)
 		res.json(message);
 		client.close();
 	}
@@ -173,13 +170,11 @@ router.post('/', function(req, res) {
 			if (!registerPack.lastName) {message+=' Nom manquant.'};
 			if (!registerPack.birthday) {message+=' Date d\'anniversaire manquant.'};
 			if (!registerPack.password) {message+=' Mot de passe manquant.'};
-			console.log(message)
 			res.json(message);
 			client.close();
 		}
 	} else if(req.body.request === 'subscribe') {
 		message = 'Les données d\'inscriptions sont incorrects, l\'inscription est annulée.';
-		console.log(message)
 		res.json(message);
 		client.close();
 	}

@@ -1,6 +1,7 @@
 import React from 'react';
 import News from './news';
 import UsersSection from './usersSection';
+import SocialRPG from './socialRPG';
 import { Paper, Typography, Grow, Grid, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core/';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import clsx from 'clsx';
@@ -16,7 +17,7 @@ export default function PaperSheet(props) {
     }, 
     {
       mainTitle: 'Social RPG',
-      mainTexte: 'le jeu d\'aventures fun et social',
+      mainTexte: 'Bienvenu à social RPG !',
     },
     {
       mainTitle: 'Les jeux',
@@ -54,9 +55,14 @@ export default function PaperSheet(props) {
 
     // Social RPG
     if (props.selectedMenu === 1) {
-      return <div>
-        pouet pouet
-      </div>
+      return <>
+        <SocialRPG
+          checkUser={props.checkUser}
+          loadingErrorMessage={props.loadingErrorMessage}
+          userDatas={props.userDatas}
+          setOpenSnack={props.setOpenSnack}
+        />
+      </>
     }
 
     // Le catalogue de jeux
@@ -94,10 +100,10 @@ export default function PaperSheet(props) {
   return (
     <div className='ScalableHeight' style={{height:props.imageHeight}}>
     <Grow in={props.checked}>
-      <Paper className={clsx('classes.root','ScalableHeight')} style={{height:props.imageHeight, boxSizing:'border-box'}}>
-        <Grid container>
+      <Paper className={clsx('classes.root','ScalableHeight')} style={{height:props.imageHeight, boxSizing:'border-box', padding:'20px'}}>
+        <Grid container style={{ padding:'10px' }}>
           <Grid item xs>
-            <Typography variant="h5" component="h3">
+            <Typography variant="h5" component="h3" style={{ marginBottom:'10px' }}>
               {elements[props.selectedMenu].mainTitle}
             </Typography>
           </Grid>
@@ -107,7 +113,7 @@ export default function PaperSheet(props) {
             </Grid>
             }
         </Grid>
-        <Typography component="p">
+        <Typography component="p" style={{ marginBottom:'10px' }}>
           {elements[props.selectedMenu].mainTexte}
         </Typography>
         {getContent()}

@@ -1,0 +1,19 @@
+nav
+  div#navigation
+    ul
+      li
+        a(href='/') <- RETOUR
+  div#userManage
+    ul
+      if !connected
+        li
+          a(href='/login') Se connecter
+      else
+        li
+          a(href='/disconnect') Se deconnecter
+      li
+        a(href='/profil') Profil
+  div#profil
+    p
+      a(href='/profil')
+        img(src=avatar, id="avatarMini", height='42px', width='42px', title=profil, alt='avatar de l\'utilisateur')

@@ -19,7 +19,7 @@ window.document.addEventListener('DOMContentLoaded', function () {
 	iconEditDescription.style.display = 'none';
 	iconEditAvatar.style.display = 'none';
 	
-	if (hideIcon === 'true') {
+	if (isUserFriend === 'true') {
 		iconAddFriend.style.display = 'none';
 	}
 
