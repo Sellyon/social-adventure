@@ -41,6 +41,7 @@ router.get('/', function(req, res) {
 })
 
 router.post('/', function(req, res) {
+	console.log(req.body.request, req.body.registerPack)
 	// Add user
 	if (req.body.request && req.body.request === 'subscribe' && req.body.registerPack) {
 		let registerPack = req.body.registerPack;
@@ -173,7 +174,7 @@ router.post('/', function(req, res) {
 			res.json(message);
 			client.close();
 		}
-	} else if(req.body.request === 'subscribe') {
+	} else if(req.body.request === 'updateAccount') {
 		message = 'Les données d\'inscriptions sont incorrects, l\'inscription est annulée.';
 		res.json(message);
 		client.close();
