@@ -1,6 +1,6 @@
 import React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Grid, Typography, Button, Slide, Dialog, DialogContent, DialogActions, DialogTitle } from '@material-ui/core/';
+import { Grid, Typography, Button, Dialog, DialogContent, DialogActions, DialogTitle } from '@material-ui/core/';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import API from './api';

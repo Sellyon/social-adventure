@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Grid, Dialog, Slide, Typography, Card, CardContent, CardActions, Avatar, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@material-ui/core/';
-import UserPage from './userPage';
+/*import UserPage from './userPage';*/
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
 /*import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';

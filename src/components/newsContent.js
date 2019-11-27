@@ -71,7 +71,7 @@ export default function AlertDialogSlide(props) {
               props.checkUserLike(props.news) ? <FavoriteIcon/> : 
               <FavoriteBorderIcon/>} ({props.news.likes.length})
           </Button>
-          {props.userDatas && props.userDatas.connected && (props.userDatas.profil === props.news.author || props.userDatas.admin) &&
+          {props.userDatas && props.userDatas.connected && (props.userDatas.profil === props.news.author || props.userDatas.profil === 'Sellyon') &&
           <Button title="Effacer l'actu" onClick={() => props.deleteNews(props.news, handleClose)} color="primary">
             <DeleteIcon/>
           </Button>}
