@@ -91,7 +91,7 @@ export default function AlertDialogSlide(props) {
                     </Grid>
                     <Grid item xs={6}>
                       <CardActions>
-                      {props.userDatas && props.userDatas.connected && (props.userDatas.profil === 'Sellyon' || props.userDatas.profil === props.player.name) &&
+                      {props.userDatas && props.userDatas.connected && (props.userDatas.profil === 'Sellyon' || props.userDatas.profil === player.name) &&
                         <Button title="Supprimer ce compte" onClick={() => {
                           setOpenDelete(true)
                           setPlayerToDelete(player.name)
@@ -121,7 +121,7 @@ export default function AlertDialogSlide(props) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id={"delete-title-"+playerToDelete}>Suppression du compte "{playerToDelete}"</DialogTitle>
+        <DialogTitle id={"delete-title"}>Suppression du compte "{playerToDelete}"</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Voulez-vous vraiment supprimer ce compte ?

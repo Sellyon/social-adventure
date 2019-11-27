@@ -369,7 +369,7 @@ router.post('/', function(req, res) {
 		          <!-- start copy -->
 		          <tr>
 		            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-		              <p style="margin: 0;">Cliquez sur le bouton pour valider votre inscription à Social-Adventure. Si vous n'avez pas créé de compte via <a href="https://social-adventure.herokuapp.com">social-adventure.herokuapp.com</a>, vous pouvez tranquillement effacer cet email.</p>
+		              <p style="margin: 0;">Cliquez sur le bouton pour valider votre inscription à Social-Adventure. Si vous n'avez pas créé de compte via <a href="http://social-adventure.herokuapp.com">social-adventure.herokuapp.com</a>, vous pouvez tranquillement effacer cet email.</p>
 		            </td>
 		          </tr>
 		          <!-- end copy -->
@@ -383,7 +383,7 @@ router.post('/', function(req, res) {
 		                    <table border="0" cellpadding="0" cellspacing="0">
 		                      <tr>
 		                        <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-		                          <a href="https://social-adventure.herokuapp.com/?accountActivation=`+code+`" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Confirmer l'inscription</a>
+		                          <a href="http://social-adventure.herokuapp.com/?accountActivation=`+code+`" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Confirmer l'inscription</a>
 		                        </td>
 		                      </tr>
 		                    </table>
@@ -398,7 +398,7 @@ router.post('/', function(req, res) {
 		          <tr>
 		            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
 		              <p style="margin: 0;">Si le bouton ne fonctionne pas, copiez-collez le lien suivant dans votre barre d'adresse :</p>
-		              <p style="margin: 0;"><a href="https://social-adventure.herokuapp.com/?accountActivation=`+code+`" target="_blank">https://social-adventure.herokuapp.com/?accountActivation=`+code+`</a></p>
+		              <p style="margin: 0;"><a href="http://social-adventure.herokuapp.com/?accountActivation=`+code+`" target="_blank">http://social-adventure.herokuapp.com/?accountActivation=`+code+`</a></p>
 		            </td>
 		          </tr>
 		          <!-- end copy -->
