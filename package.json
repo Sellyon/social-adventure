@@ -18,7 +18,7 @@
     "package.json": "^2.0.1",
     "path": "^0.12.7",
     "prop-types": "^15.7.2",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "react": "^16.11.0",
     "react-dom": "^16.10.2",
     "react-moment": "^0.9.6",
